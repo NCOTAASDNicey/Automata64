@@ -2,29 +2,33 @@
 #import "macros.asm"
 #import "zero.asm"
 
-multicolour: .byte 0
-
 multi_scr_col: .byte blue
 multi_bor_col: .byte green
 multi_1_col: .byte red
 multi_2_col: .byte yellow
 
-toggle_fullscreen:
-        lda #0
-        sta multicolour
-        jmp _toggle_fullscreen
 
 toggle_fullscreen_multi:
-        lda #8
-        sta multicolour
+        lda #$01
+        eor fullscreen
+        sta fullscreen
+        cmp #0
+        bne _enter_multi_fullscreen
+        jmp leave_fullscreen
 
-_toggle_fullscreen:
+toggle_fullscreen:
         lda #$01
         eor fullscreen
         sta fullscreen
         cmp #0
         bne _enter_fullscreen
         jmp leave_fullscreen
+
+_enter_multi_fullscreen:
+        // Multi colour
+        lda VIC_control_2
+        ora #$10
+        sta VIC_control_2 
 
 _enter_fullscreen:
         lda multi_scr_col
@@ -33,18 +37,17 @@ _enter_fullscreen:
         sta VIC_border
        
         lda VIC_control_mem //Point screen memory at $2000
-        and #$0F
-        ora #$80
+        ora #$8
         sta VIC_control_mem
-
+        // Hi res
         lda VIC_control_1
         ora #$20
-        sta VIC_control_1
+        sta VIC_control_1       
              
-       //Clear character map
-        lda #<bitmap
+        //Clear character map
+        lda #<screen_mem_hi
         sta _chptr
-        lda #>bitmap
+        lda #>screen_mem_hi
         sta _chptr+1
 !:      lda #$0
         ldy #0
@@ -53,8 +56,8 @@ _enter_fullscreen:
         bne !-
         inc _chptr+1
         lda _chptr+1
-        cmp #$58
-        bne !--
+        cmp #$40
+        bcc !--
 
         //Character colour for HI-RES 2 colour mode
         lda multi_1_col // upper nybble pixel set colour
@@ -63,14 +66,12 @@ _enter_fullscreen:
         rol
         rol
         ora multi_2_col  // lower nybble pixel set colour
-        ora multicolour // set multicolour mode
              
         ldy #0
-        //lda #$73
-!:      sta screen_mem,Y
-        sta screen_mem+250,Y
-        sta screen_mem+500,Y
-        sta screen_mem+750,Y
+!:      sta colour_mem_hi,Y
+        sta colour_mem_hi+250,Y
+        sta colour_mem_hi+500,Y
+        sta colour_mem_hi+750,Y
         iny
         cpy #250
         bne !-
@@ -84,13 +85,15 @@ leave_fullscreen:
         screen_col(lt_blue, blue)
 
         lda VIC_control_mem //Point screen memory at $0400
-        and #$0F
-        ora #$10
+        and #$F7
         sta VIC_control_mem
        
         lda VIC_control_1
         and #$DF
         sta VIC_control_1
+        lda VIC_control_2
+        and #$EF
+        sta VIC_control_2
 
         lda #0
         rts

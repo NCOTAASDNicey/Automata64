@@ -12,5 +12,3 @@ _chptr: .word 0
 _styleptr: .word 0
 _tempptr: .word 0
 }
-
-.const bitmap = $2000

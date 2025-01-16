@@ -32,12 +32,12 @@ continue4:
         
 initialise_ptrs_automata4:
         // initate pointers
-        lda #<bitmap
+        lda #<screen_mem_hi
         sta row_start
-        lda #>bitmap
+        lda #>screen_mem_hi
         sta row_start+1
 
-        lda #[11*16]
+        lda #200
         sta row_counter        
 
         lda cellsrc
@@ -65,7 +65,7 @@ _one_cell_init4:
 _random_init4:
         lda $A2
         clc
-        ldy #[4*20]+2                
+        ldy #$FF               
 !:      adc 0,Y
         pha
         and #03
@@ -88,7 +88,7 @@ _render_automata_row4:
         lda row_start+1
         sta _chptr+1
 
-        lda #20
+        lda #40
         sta col_counter      
         
         // render new row
@@ -99,10 +99,8 @@ _render_automata_col4:
         ldy #0
         sty pixel_acc
 !:      clc
-        lda pixel_acc
-        asl
-        asl
-        sta pixel_acc
+        asl pixel_acc
+        asl pixel_acc
         lda (_tempptr),Y
         and #03
         ora pixel_acc
@@ -128,7 +126,7 @@ _render_automata_col4:
         //advance screen pointer to next 4 pixels
         clc
         lda _chptr
-        adc #$10        //bytes in a double height programmable character
+        adc #$8        //bytes in a programmable character
         sta _chptr
         lda _chptr+1
         adc #0
@@ -153,13 +151,13 @@ _render_automata_col4:
         and #$0F
         cmp #0
         bne !+
-        clc
-        lda #$30
-        adc row_start
-        sta row_start
-        lda #$01
-        adc row_start+1
-        sta row_start+1
+        ; clc
+        ; lda #$30
+        ; adc row_start
+        ; sta row_start
+        ; lda #$01
+        ; adc row_start+1
+        ; sta row_start+1
        
         // calculate new row into dst using src
 !:      lda cellsrc
