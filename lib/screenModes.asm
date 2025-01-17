@@ -23,6 +23,10 @@ toggle_fullscreen:
         bne _enter_fullscreen
         jmp leave_fullscreen
 
+enter_fullscreen_multi:
+        lda #1<<FULLSCREEN_BIT | 1<<MULTI_BIT
+        ora scrmode
+        sta scrmode
 _enter_multi_fullscreen:
         // Multi colour
         lda VIC_control_2
@@ -91,7 +95,7 @@ leave_fullscreen:
         and #~[1<<FULLSCREEN_BIT | 1<<MULTI_BIT]
         sta scrmode
         cls()
-        screen_col(lt_blue, blue)
+        screen_col(black, black)
 
         lda VIC_control_mem //Point screen memory at $0400
         and #$F7
@@ -104,4 +108,5 @@ leave_fullscreen:
         lda VIC_control_2
         and #$EF
         sta VIC_control_2
+        lda #0
         rts

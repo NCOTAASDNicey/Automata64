@@ -4,20 +4,57 @@
 
 :BasicUpstart2(mainProg)
         * = $840
+
+#import "lib/screenModes.asm"
+#import "lib/render4.asm"
+#import "lib/print.asm"
+#import "lib/gui.asm"
+
 mainProg:
     cls()
+    screen_col(black, black)
+    lda #0
+    sta scrmode
+    sta return
+    lda #1
+    sta selected
+    jsr _key_handledf
+    callMethod(method_render, _boxlist)    
+
+/*    
     jsr toggle_fullscreen_multi    
     jsr render4
+
 !:  jsr udtim
     jsr stop
     bne !-
     jsr toggle_fullscreen_multi
     print(message, black, 0)
     rts
+*/
+_main_loop:
+    jsr waitkey
+    sta keypress    
+    callMethod(method_key, _boxlist)
+    pha // Use key methods return values
+    callMethod(method_render, _boxlist)
+    pla
+    bne done
+    jmp _main_loop
 
-#import "lib/screenModes.asm"
-#import "lib/render4.asm"
-#import "lib/print.asm"
+done:
+    cls()
+    screen_col(lt_blue, blue)
+    print(message, black, 0)
+    rts
+
+waitkey:
+!:   jsr getin
+     cmp #0
+     beq !-    
+     rts          
+
+
 
 message: .text "WOO YAY"
 .byte 0

@@ -1,4 +1,6 @@
+#importonce
 #import "zero.asm"
+#import "lib/render4.asm"
 
 .const COLUMNS=40
 .const ROWS=25
@@ -21,6 +23,7 @@ rule4:
 .byte 1,2,3, 0,1,2, 2,0,3, 2
 
 render4:
+        jsr enter_fullscreen_multi
         lda scrmode
         beq !+
         jsr initialise_ptrs_automata4
