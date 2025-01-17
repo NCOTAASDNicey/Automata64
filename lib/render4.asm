@@ -21,7 +21,7 @@ rule4:
 .byte 1,2,3, 0,1,2, 2,0,3, 2
 
 render4:
-        lda fullscreen
+        lda scrmode
         beq !+
         jsr initialise_ptrs_automata4
         jsr initialise_cells_automata4
@@ -29,7 +29,7 @@ render4:
         rts
         
 continue4:
-        lda fullscreen
+        lda scrmode
         beq !+
         jsr initialise_ptrs_automata4
         jsr _render_automata_row4

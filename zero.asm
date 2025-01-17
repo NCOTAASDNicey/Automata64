@@ -1,9 +1,12 @@
 #importonce
-#import "kernal.asm"
+#import "lib/kernal.asm"
+
+.const FULLSCREEN_BIT=0
+.const MULTI_BIT=1
 
 * = $a7 virtual
 .zp {
-fullscreen: .byte 0
+ scrmode: .byte 0
 }
 * = zero_page_rs_232 virtual
 .zp {

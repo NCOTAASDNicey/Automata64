@@ -1,4 +1,4 @@
-#import "kernal.asm"
+#import "lib/kernal.asm"
 #import "macros.asm"
 #import "objects.asm"
 
@@ -43,7 +43,7 @@ mainProg:
      cls()
      screen_col(black, black)
      lda #0
-     sta fullscreen
+     sta scrmode
      sta return
      lda #1
      sta selected
@@ -155,7 +155,7 @@ render_toggle:
          rts
 render:
          jsr construct
-       lda fullscreen
+       lda scrmode
          beq !+
        lda #0
          rts
@@ -381,8 +381,8 @@ toggle_fullscreen_multi:
 
 _toggle_fullscreen:
       lda #$01
-        eor fullscreen
-        sta fullscreen
+        eor scrmode
+        sta scrmode
         cmp #0
         bne _enter_fullscreen
         jmp leave_fullscreen
@@ -444,7 +444,7 @@ _enter_fullscreen:
 
 leave_fullscreen:
       lda #0
-        sta fullscreen
+        sta scrmode
        cls()
        screen_col(black, black)
 
@@ -462,7 +462,7 @@ leave_fullscreen:
  
 automata:
          jsr toggle_fullscreen
-       lda fullscreen
+       lda scrmode
          beq !+
         //JSR initialise_ptrs_automata
         //JSR initialise_cells_automata
@@ -475,7 +475,7 @@ automata:
         
 continue:
        lda #0
-         cmp fullscreen
+         cmp scrmode
          beq !+
          jsr initialise_ptrs_automata4
          jsr _render_automata_row
@@ -703,7 +703,7 @@ _render_automata_col:
 
 automata4:
          jsr toggle_fullscreen_multi
-       lda fullscreen
+       lda scrmode
          beq !+
          jsr initialise_ptrs_automata4
          jsr initialise_cells_automata4
@@ -712,7 +712,7 @@ automata4:
         
 continue4:
        lda #0
-         cmp fullscreen
+         cmp scrmode
          beq !+
          jsr initialise_ptrs_automata4
          jsr _render_automata_row4

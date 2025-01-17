@@ -1,4 +1,4 @@
-#import "kernal.asm"
+#import "lib/kernal.asm"
 #import "macros.asm"
 #import "zero.asm"
 

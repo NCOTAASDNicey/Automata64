@@ -1,4 +1,4 @@
-#import "kernal.asm"
+#import "lib/kernal.asm"
 #import "macros.asm"
 #import "zero.asm"
 
@@ -8,17 +8,17 @@ multi_1_col: .byte red
 multi_2_col: .byte yellow
 
 toggle_fullscreen_multi:
-        lda #$01
-        eor fullscreen
-        sta fullscreen
+        lda #1<<FULLSCREEN_BIT | 1<<MULTI_BIT
+        eor scrmode
+        sta scrmode
         cmp #0
         bne _enter_multi_fullscreen
         jmp leave_fullscreen
 
 toggle_fullscreen:
-        lda #$01
-        eor fullscreen
-        sta fullscreen
+        lda #1<<FULLSCREEN_BIT
+        eor scrmode
+        sta scrmode
         cmp #0
         bne _enter_fullscreen
         jmp leave_fullscreen
@@ -58,8 +58,7 @@ _enter_fullscreen:
         cmp #$40
         bcc !--
 
-
-        //Screen memory also holds colour bytes
+        //Screen memory also holds colour nybbles 01/10
         lda multi_1_col // upper nybble pixel set colour
         clc
         rol
@@ -76,8 +75,7 @@ _enter_fullscreen:
         cpy #250
         bne !-        
 
-
-        lda multi_bor_col // upper nybble pixel set colour             
+        lda multi_bor_col // 11           
         ldy #0
 !:      sta colour_mem,Y
         sta colour_mem+250,Y
@@ -89,8 +87,9 @@ _enter_fullscreen:
         rts
 
 leave_fullscreen:
-        lda #0
-        sta fullscreen
+        lda scrmode
+        and #~[1<<FULLSCREEN_BIT | 1<<MULTI_BIT]
+        sta scrmode
         cls()
         screen_col(lt_blue, blue)
 
