@@ -7,8 +7,8 @@ cellsrc:
 .word cellbuffer1
 celldst:
 .word cellbuffer2
-cellbuffer1: .fill 322, 0
-cellbuffer2: .fill 322, 0
+cellbuffer1: .fill [4*40]+2, 0
+cellbuffer2: .fill [4*40]+2, 0
 pixel_acc: .byte 0
 render_random: .byte 1
 rule4:
@@ -32,12 +32,12 @@ continue4:
         
 initialise_ptrs_automata4:
         // initate pointers
-        lda #<bitmap
+        lda #<screen_mem_hi
         sta row_start
-        lda #>bitmap
+        lda #>screen_mem_hi
         sta row_start+1
 
-        lda #[11*16]
+        lda #0
         sta row_counter        
 
         lda cellsrc
@@ -50,7 +50,7 @@ initialise_cells_automata4:
         // clear  and initailise src buffer
         lda render_random
         cmp #0
-        beq _random_init4              
+        bne _random_init4              
 
 _one_cell_init4:      
         ldy #[4*20]+2        
@@ -65,7 +65,7 @@ _one_cell_init4:
 _random_init4:
         lda $A2
         clc
-        ldy #[4*20]+2                
+        ldy #[4*40]                
 !:      adc 0,Y
         pha
         and #03
@@ -88,7 +88,7 @@ _render_automata_row4:
         lda row_start+1
         sta _chptr+1
 
-        lda #20
+        lda #40
         sta col_counter      
         
         // render new row
@@ -99,10 +99,8 @@ _render_automata_col4:
         ldy #0
         sty pixel_acc
 !:      clc
-        lda pixel_acc
-        asl
-        asl
-        sta pixel_acc
+        asl pixel_acc
+        asl pixel_acc
         lda (_tempptr),Y
         and #03
         ora pixel_acc
@@ -128,7 +126,7 @@ _render_automata_col4:
         //advance screen pointer to next 4 pixels
         clc
         lda _chptr
-        adc #$10        //bytes in a double height programmable character
+        adc #$8        //bytes in a programmable character
         sta _chptr
         lda _chptr+1
         adc #0
@@ -140,7 +138,13 @@ _render_automata_col4:
         
         //repeat till end of screen
         //advance row  start
-        dec row_counter
+        inc row_counter
+        lda row_counter
+        and #$07
+        cmp #$00
+        beq !+
+
+        // advance just one byte
         clc
         lda #$01
         adc row_start
@@ -148,13 +152,11 @@ _render_automata_col4:
         lda #$00
         adc row_start+1
         sta row_start+1
+        jmp !++
 
-        lda row_counter
-        and #$0F
-        cmp #0
-        bne !+
-        clc
-        lda #$30
+        // All 8 rows done advance 160 bytes
+!:      clc
+        lda #$39
         adc row_start
         sta row_start
         lda #$01
@@ -180,11 +182,10 @@ _render_automata_col4:
 
         ldy #1
         lda (_chptr),Y
-        ldy #81
+        ldy #$A1
         sta (_chptr),Y
 
-        ldy #0
-        
+        ldy #0        
 !:      dey
         lda (_chptr),Y    //Previous cell
         iny
@@ -206,7 +207,7 @@ _render_automata_col4:
         sta (_tempptr),Y  //Save new cell value at current index on output ptr
         iny               //Advance current index
 
-        cpy #81          //Repeat until all cells processed
+        cpy #$A1          //Repeat until all cells processed
         bne !-
         
         //swap pointers
@@ -221,8 +222,8 @@ _render_automata_col4:
         sta cellsrc+1
         
         lda row_counter
-        cmp #0
-        beq !+
+        cmp #[8*25]
+        bcs !+
         jmp _render_automata_row4        
  !:     lda #0 //Dont signal exit 
         rts
