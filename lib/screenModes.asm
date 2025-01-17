@@ -59,25 +59,33 @@ _enter_fullscreen:
         bcc !--
 
 
-        //Character colour for HI-RES 2 colour mode
+        //Screen memory also holds colour bytes
         lda multi_1_col // upper nybble pixel set colour
+        clc
         rol
         rol
         rol
         rol
-        ora multi_2_col  // lower nybble pixel set colour
-             
+        ora multi_2_col  // lower nybble pixel set colour        
         ldy #0
-        //lda #$73
-!:      sta colour_mem_hi,Y
-        sta colour_mem_hi+250,Y
-        sta colour_mem_hi+500,Y
-        sta colour_mem_hi+750,Y
+!:      sta screen_mem,Y
+        sta screen_mem+250,Y
+        sta screen_mem+500,Y
+        sta screen_mem+750,Y
+        iny
+        cpy #250
+        bne !-        
 
+
+        lda multi_bor_col // upper nybble pixel set colour             
+        ldy #0
+!:      sta colour_mem,Y
+        sta colour_mem+250,Y
+        sta colour_mem+500,Y
+        sta colour_mem+750,Y        
         iny
         cpy #250
         bne !-
-        lda #0
         rts
 
 leave_fullscreen:
@@ -93,9 +101,8 @@ leave_fullscreen:
         lda VIC_control_1
         and #$DF
         sta VIC_control_1
+
         lda VIC_control_2
         and #$EF
         sta VIC_control_2
-
-        lda #0
         rts

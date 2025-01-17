@@ -1,5 +1,11 @@
 #import "zero.asm"
 
+.const COLUMNS=40
+.const ROWS=25
+.const PIXELS_PER_BYTE=4
+.const BYTES_PER_CHAR=8
+.const BUFFER_LENGTH=COLUMNS*PIXELS_PER_BYTE
+
 row_counter: .byte 0
 col_counter: .byte 0
 row_start: .word 0
@@ -7,8 +13,8 @@ cellsrc:
 .word cellbuffer1
 celldst:
 .word cellbuffer2
-cellbuffer1: .fill [4*40]+2, 0
-cellbuffer2: .fill [4*40]+2, 0
+cellbuffer1: .fill BUFFER_LENGTH+2, 0
+cellbuffer2: .fill BUFFER_LENGTH+2, 0
 pixel_acc: .byte 0
 render_random: .byte 1
 rule4:
@@ -53,19 +59,19 @@ initialise_cells_automata4:
         bne _random_init4              
 
 _one_cell_init4:      
-        ldy #[4*20]+2        
+        ldy #[PIXELS_PER_BYTE*COLUMNS/2]+2        
         lda #0
 !:      sta (_tempptr),Y
         dey
         bne !-
         lda #03
-        sta cellbuffer1+40
+        sta cellbuffer1+COLUMNS
         jmp  _render_automata_row4
        
 _random_init4:
         lda $A2
         clc
-        ldy #[4*40]                
+        ldy #[PIXELS_PER_BYTE*COLUMNS]                
 !:      adc 0,Y
         pha
         and #03
@@ -88,14 +94,14 @@ _render_automata_row4:
         lda row_start+1
         sta _chptr+1
 
-        lda #40
+        lda #COLUMNS
         sta col_counter      
         
         // render new row
         
 _render_automata_col4:
         //collect 4 pixels from buffer
-        ldx #4
+        ldx #PIXELS_PER_BYTE
         ldy #0
         sty pixel_acc
 !:      clc
@@ -110,7 +116,7 @@ _render_automata_col4:
         bne !-
         pha
         clc
-        lda #4
+        lda #PIXELS_PER_BYTE
         adc _tempptr
         sta _tempptr
         lda #0
@@ -126,7 +132,7 @@ _render_automata_col4:
         //advance screen pointer to next 4 pixels
         clc
         lda _chptr
-        adc #$8        //bytes in a programmable character
+        adc #BYTES_PER_CHAR        //bytes in a programmable character
         sta _chptr
         lda _chptr+1
         adc #0
@@ -154,7 +160,7 @@ _render_automata_col4:
         sta row_start+1
         jmp !++
 
-        // All 8 rows done advance 160 bytes
+        // All BYTES_PER_CHAR rows done advance 160 bytes
 !:      clc
         lda #$39
         adc row_start
@@ -175,14 +181,14 @@ _render_automata_col4:
         sta _tempptr+1
 
         //exchange last first  and cells
-        ldy #80
+        ldy #BUFFER_LENGTH
         lda (_chptr),Y
         ldy #0
         sta (_chptr),Y
 
         ldy #1
         lda (_chptr),Y
-        ldy #$A1
+        ldy #[BUFFER_LENGTH+1]
         sta (_chptr),Y
 
         ldy #0        
@@ -222,7 +228,7 @@ _render_automata_col4:
         sta cellsrc+1
         
         lda row_counter
-        cmp #[8*25]
+        cmp #[BYTES_PER_CHAR*ROWS]
         bcs !+
         jmp _render_automata_row4        
  !:     lda #0 //Dont signal exit 

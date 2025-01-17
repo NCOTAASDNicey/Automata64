@@ -94,7 +94,6 @@
 .const screen_mem=       $0400
 .const screen_mem_hi=    $2000
 .const colour_mem=       $D800
-.const colour_mem_hi=    $D800
 
 .const X_CHARS=   40
 .const Y_CHARS=   25
