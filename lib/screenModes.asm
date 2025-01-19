@@ -2,11 +2,6 @@
 #import "macros.asm"
 #import "zero.asm"
 
-multi_scr_col: .byte blue
-multi_bor_col: .byte green
-multi_1_col: .byte red
-multi_2_col: .byte yellow
-
 toggle_fullscreen_multi:
         lda #1<<FULLSCREEN_BIT | 1<<MULTI_BIT
         eor scrmode
@@ -34,9 +29,10 @@ _enter_multi_fullscreen:
         sta VIC_control_2 
 
 _enter_fullscreen:
-        lda multi_scr_col
+        ldy #[box_colour-box_origin]
+        lda [boxColB+jmp_header_size],Y        
         sta VIC_back_0
-        lda multi_bor_col
+        lda [boxColB+jmp_header_size],Y        
         sta VIC_border
        
         lda VIC_control_mem //Point screen memory at $2000
@@ -63,13 +59,14 @@ _enter_fullscreen:
         bcc !--
 
         //Screen memory also holds colour nybbles 01/10
-        lda multi_1_col // upper nybble pixel set colour
+        ldy #[box_colour-box_origin]
+        lda [boxColR+jmp_header_size],Y        
         clc
         rol
         rol
         rol
         rol
-        ora multi_2_col  // lower nybble pixel set colour        
+        ora [boxColP+jmp_header_size],Y        
         ldy #0
 !:      sta screen_mem,Y
         sta screen_mem+250,Y
@@ -79,7 +76,8 @@ _enter_fullscreen:
         cpy #250
         bne !-        
 
-        lda multi_bor_col // 11           
+        ldy #[box_colour-box_origin]
+        lda [boxColA+jmp_header_size],Y        
         ldy #0
 !:      sta colour_mem,Y
         sta colour_mem+250,Y
@@ -95,7 +93,7 @@ leave_fullscreen:
         and #~[1<<FULLSCREEN_BIT | 1<<MULTI_BIT]
         sta scrmode
         cls()
-        screen_col(black, black)
+        screen_col(gui_back_col, gui_bor_col)
 
         lda VIC_control_mem //Point screen memory at $0400
         and #$F7

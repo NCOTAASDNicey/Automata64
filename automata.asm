@@ -5,14 +5,20 @@
 :BasicUpstart2(mainProg)
         * = $840
 
-#import "lib/screenModes.asm"
-#import "lib/render4.asm"
+.const edge_col=white
+.const selected_col=yellow
+.const gui_back_col=black
+.const gui_bor_col=gray_3
+
+
 #import "lib/print.asm"
 #import "lib/gui.asm"
+#import "lib/screenModes.asm"
+#import "lib/render4.asm"
 
 mainProg:
     cls()
-    screen_col(black, black)
+    screen_col(gui_back_col, gui_bor_col)
     lda #0
     sta scrmode
     sta return
@@ -21,17 +27,6 @@ mainProg:
     jsr _key_handledf
     callMethod(method_render, _boxlist)    
 
-/*    
-    jsr toggle_fullscreen_multi    
-    jsr render4
-
-!:  jsr udtim
-    jsr stop
-    bne !-
-    jsr toggle_fullscreen_multi
-    print(message, black, 0)
-    rts
-*/
 _main_loop:
     jsr waitkey
     sta keypress    

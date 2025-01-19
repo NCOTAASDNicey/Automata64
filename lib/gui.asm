@@ -13,7 +13,7 @@
 .const bottom_left = 7
 .const fill = 8
 
-.const boxes_list_size = 10 //Update this when you add more boxes
+#import "lib/boxes.asm"
 
 get:
         jsr construct
@@ -488,17 +488,16 @@ handlekeyi:
         
 writeBank:
         pha
-        sta _scratch
         tya
         pha
         txa
         pha
-
+        
         lda #<rule4bank
         sta _chptr
         lda #>rule4bank
         sta _chptr+1
-        lda _scratch
+        lda rule4index
         clc
         asl
         asl
@@ -514,20 +513,20 @@ writeBank:
         sta _tempptr
         lda #>rule4
         sta _tempptr+1        
-
+          
         ldy #10
 !:      dey
         lda (_tempptr),Y
         sta (_chptr),Y
-        cpy #0
+        cpy #0     
         bne !-    
-
+        
         pla
         tax
         pla
         tay
         pla
-        rts      
+        rts     
 
 rdBank:
         pha
@@ -724,185 +723,6 @@ exit:
         lda #1
         rts
 
- 
-      
-flow:
-  jmp flowVtable
-.byte 1
-.word keys_pressed 
-.byte 0   
-
-/*    
-boxRun:
-  jmp confirmboxesVtable
-.byte [box_width_working-box_origin]-1
-.word box_origin
-.word screen_mem + 17 + [X_CHARS*0]
-.word colour_mem + 17 + [X_CHARS*0]
-.byte 18,2,5,5
-.byte cyan,white
-.word  style1
-.word str_run
-.byte 0
-.byte 0
-.byte 0
-
-boxRuleBinary:
-jmp binaryruleVtable
-.byte [box_width_working-box_origin]-1
-.word box_origin
-.word screen_mem + 0 + [X_CHARS*0]
-.word colour_mem + 0 + [X_CHARS*0]
-.byte 2,2,12,5
-.byte white,white
-.word  style3
-.word str_rule
-.byte 1
-.byte 0
-.byte 0
-*/
-
-
-boxRandom:
-  jmp toggleBoxesVtable
-.byte [box_width_working-box_origin]-1
-.word box_origin
-.word screen_mem + 2 + [X_CHARS*6]
-.word colour_mem + 2 + [X_CHARS*6]
-.byte 2,5,3,3
-.byte cyan,white
-.word  style1
-.word str_rnd
-.byte 0
-.byte 0
-.byte 0
-
-boxColB:
-  jmp colourboxesVtable
-.byte [box_width_working-box_origin]-1
-.word box_origin
-.word screen_mem + 7 + [X_CHARS*6]
-.word colour_mem + 7 + [X_CHARS*6]
-.byte 7,5,3,3
-.byte blue,white
-.word  style3
-.word str_back
-.byte 0
-.byte 0
-.byte 0
-
-boxColR:
-  jmp colourboxesVtable
-.byte [box_width_working-box_origin]-1
-.word box_origin
-.word screen_mem + 11 + [X_CHARS*6]
-.word colour_mem + 11 + [X_CHARS*6]
-.byte 11,5,3,3
-.byte green,white
-.word  style3
-.word str_bord
-.byte 0
-.byte 0
-.byte 0
-
-boxColP:
-  jmp colourboxesVtable
-.byte [box_width_working-box_origin]-1
-.word box_origin
-.word screen_mem + 15 + [X_CHARS*6]
-.word colour_mem + 15 + [X_CHARS*6]
-.byte 15,5,3,3
-.byte yellow,white
-.word  style3
-.word str_pen
-.byte 0
-.byte 0
-.byte 0
-
-boxColA:
-  jmp colourboxesVtable
-.byte [box_width_working-box_origin]-1
-.word box_origin
-.word screen_mem + 19 + [X_CHARS*6]
-.word colour_mem + 19 + [X_CHARS*6]
-.byte 19,5,3,3
-.byte red,white
-.word  style3
-.word str_aux
-.byte 0
-.byte 0
-.byte 0
-
-boxRule4Index:
-  jmp rule4IndexVtable
-.byte [box_width_working-box_origin]-1
-.word box_origin
-.word screen_mem + 0 + [X_CHARS*11]
-.word colour_mem + 0 + [X_CHARS*11]
-.byte 0,10,3,3
-.byte white,white
-.word  style3
-.word str_ind
-.byte 0
-.byte 0
-.byte 0
-
-boxRuleBit4:
-  jmp bit4ruleVtable
-.byte [box_width_working-box_origin]-1
-.word box_origin
-.word screen_mem + 3 + [X_CHARS*10]
-.word colour_mem + 3 + [X_CHARS*10]
-.byte 5,12,14,5
-.byte white,white
-.word  style3
-.word str_rule4
-.byte 0
-.byte 0
-.byte 0
-
-boxRun4:
-  jmp confirmboxes4Vtable
-.byte [box_width_working-box_origin]-1
-.word box_origin
-.word screen_mem + 17 + [X_CHARS*10]
-.word colour_mem + 17 + [X_CHARS*10]
-.byte 18,12,5,5
-.byte cyan,white
-.word  style1
-.word str_run
-.byte 0
-.byte 0
-.byte 0
-    
-boxExit:
-  jmp exitboxesVtable
-.byte [box_width_working-box_origin]-1
-.word box_origin
-.word screen_mem + 11 + [X_CHARS*19]
-.word colour_mem + 11 + [X_CHARS*19]
-.byte 12,20,11,3
-.byte cyan,white
-.word  style1
-.word str_exit
-.byte 0
-.byte 0
-.byte 0
-
-boxFinal:
-  jmp boxesVtable
-.byte [box_width_working-box_origin]-1
-.word box_origin
-.word screen_mem + 1 + [X_CHARS*1]
-.word colour_mem + 1 + [X_CHARS*1]
-.byte 2,2,X_CHARS-2,Y_CHARS-2
-.byte white,red
-.word  style2
-.word 0
-.byte 0
-.byte 0
-.byte 0
-
 rule:
 .byte 0,1,1, 1,1,0, 0,0
 ruledec:
@@ -933,19 +753,12 @@ rule4bank:
 .byte 3,3,3, 3,3,3, 3,3,3, 3, 6,5,7,2,0,0
 rule4bankend:
 
+
 boxes:
-.word flow
-// .word boxRuleBinary
-// .word boxRun
-.word boxRandom
-.word boxColB
-.word boxColR
-.word boxColP
-.word boxColA
-.word boxRule4Index
-.word boxRuleBit4
-.word boxRun4
-.word boxExit
+
+.for (var i=0; i<boxesList.size(); i++) {
+        .word boxesList.get(i)
+}
 
 str_exit: .text "EXIT"
 .byte 0
@@ -963,6 +776,8 @@ str_rnd: .text "RND"
 .byte 0
 str_ind: .text "IND"
 .byte 0
+str_automata: .text " 1D CELLULAR AUTOMATA "
+.byte 0
 str_filenameL: .text "RULE"
 .byte 0
 str_filenameS: .text "str_0:RULE"
@@ -971,50 +786,4 @@ str_rule: .text "********"
 .byte 0
 str_rule4: .text "**********"
 .byte 0
-style1: .byte 64, 64, 93, 93, 110, 112, 125, 109, 102
-style2: .byte 98, 98+128, 97, 97+128, 123, 108, 126, 124, 160
-style3: .byte 64, 64, 93, 93, 73, 85, 75, 74, 102
-style4: .byte 98+128, 98, 97+128, 97, 127, 255, 255, 127, 102
-
-
-boxesVtable:
-     jsr doJumpTable
-    .word render, handlekey, get, select, deselect, empty, empty, empty, empty
- 
-exitboxesVtable:
-     jsr doJumpTable 
-    .word render, handlekey, get, select, deselect, exit, empty, empty, empty
-
-//confirmboxesVtable:
-//      jsr doJumpTable    
-//     .word render, handlekey, get, select, deselect, automata, empty, leave_fullscreen, continue
-    
-confirmboxes4Vtable:
-     jsr doJumpTable    
-    .word render, handlekey, get, select, deselect, render4, empty, leave_fullscreen, continue4   
-    
-colourboxesVtable:
-     jsr doJumpTable    
-    .word render, handlekeyc, get, select, deselect, empty, empty, empty, empty       
-    
-rule4IndexVtable:
-     jsr doJumpTable    
-    .word render, handlekeyi, get, select, deselect, empty, render_index, empty, empty       
-    
-// binaryruleVtable:
-//      jsr doJumpTable
-//     .word render_ruleb, handlerulekeyb, get, select, deselect, update_ruleb, empty, empty, empty    
-
-bit4ruleVtable:
-     jsr doJumpTable
-    .word renderrule4, handlerulekey4, get, select, deselect, update_rule4, empty, empty, empty
-    
-flowVtable:
-     jsr doJumpTable
-    .word empty, flowKey, get, empty, empty, empty, empty, empty
-    
-toggleBoxesVtable:
-     jsr doJumpTable
-   .word render, handlekey, get, select, deselect, toggle, render_toggle, empty, empty
-
 

@@ -18,7 +18,6 @@ celldst:
 cellbuffer1: .fill BUFFER_LENGTH+2, 0
 cellbuffer2: .fill BUFFER_LENGTH+2, 0
 pixel_acc: .byte 0
-render_random: .byte 1
 rule4:
 .byte 1,2,3, 0,1,2, 2,0,3, 2
 
@@ -57,18 +56,19 @@ initialise_ptrs_automata4:
 
 initialise_cells_automata4:     
         // clear  and initailise src buffer
-        lda render_random
+        ldy #[box_check-box_origin]
+        lda [boxRandom+jmp_header_size],Y
         cmp #0
-        bne _random_init4              
+        beq _random_init4              
 
 _one_cell_init4:      
-        ldy #[PIXELS_PER_BYTE*COLUMNS/2]+2        
+        ldy #[PIXELS_PER_BYTE*COLUMNS]       
         lda #0
 !:      sta (_tempptr),Y
         dey
         bne !-
         lda #03
-        sta cellbuffer1+COLUMNS
+        sta cellbuffer1+[PIXELS_PER_BYTE*COLUMNS/2]
         jmp  _render_automata_row4
        
 _random_init4:

@@ -10,7 +10,6 @@ keypress: .byte 0
 fullscreen: .byte 0
 return: .byte 0
 
-
 // args for box
 box_origin: .word 0
 box_col_origin: .word 0
