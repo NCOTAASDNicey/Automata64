@@ -6,7 +6,7 @@
         * = $840
 
 .const edge_col=white
-.const selected_col=yellow
+.const selected_col=cyan
 .const gui_back_col=black
 .const gui_bor_col=gray_3
 

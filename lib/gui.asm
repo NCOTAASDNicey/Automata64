@@ -13,7 +13,14 @@
 .const bottom_left = 7
 .const fill = 8
 
+.const COLUMNS=40
+.const ROWS=25
+.const PIXELS_PER_BYTE=4
+.const BYTES_PER_CHAR=8
+.const BUFFER_LENGTH=COLUMNS*PIXELS_PER_BYTE
+
 #import "lib/boxes.asm"
+#import "lib/scroll.asm"
 
 get:
         jsr construct
@@ -345,7 +352,7 @@ handlekey:
         cmp keypress
         bne !+
         ldy #method_continue
-        jmp reinvokevirtual
+        jmp reinvokevirtual       
 
 !:      lda #KEY_ESC
         cmp keypress

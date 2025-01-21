@@ -26,7 +26,7 @@ exitboxesVtable:
     
 confirmboxes4Vtable:
      jsr doJumpTable    
-    .word render, handlekey, get, select, deselect, render4, empty, leave_fullscreen, continue4   
+    .word render, handlekey, get, select, deselect, render4, empty, leave_fullscreen, continue8rows   
     
 colourboxesVtable:
      jsr doJumpTable    

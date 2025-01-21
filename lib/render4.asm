@@ -1,12 +1,5 @@
 #importonce
 #import "zero.asm"
-#import "lib/render4.asm"
-
-.const COLUMNS=40
-.const ROWS=25
-.const PIXELS_PER_BYTE=4
-.const BYTES_PER_CHAR=8
-.const BUFFER_LENGTH=COLUMNS*PIXELS_PER_BYTE
 
 row_counter: .byte 0
 col_counter: .byte 0
@@ -36,7 +29,28 @@ continue4:
         jsr initialise_ptrs_automata4
         jsr _render_automata_row4
 !:      lda #0
-        rts            
+        rts
+
+continue8rows:
+        lda scrmode
+        beq !+
+        jsr scrollup8
+        lda #<[screen_mem_hi+[[ROWS-1]*COLUMNS*BYTES_PER_CHAR]]
+        sta row_start
+        lda #>[screen_mem_hi+[[ROWS-1]*COLUMNS*BYTES_PER_CHAR]]
+        sta row_start+1
+
+        lda #BYTES_PER_CHAR*[ROWS-1]
+        sta row_counter        
+
+        lda cellsrc
+        sta _tempptr
+        lda cellsrc+1
+        sta _tempptr+1
+                
+        jsr _render_automata_row4
+!:      lda #0
+        rts                   
         
 initialise_ptrs_automata4:
         // initate pointers
