@@ -35,6 +35,7 @@ continue8rows:
         lda scrmode
         beq !+
         jsr scrollup8
+doLast8Rows:
         lda #<[screen_mem_hi+[[ROWS-1]*COLUMNS*BYTES_PER_CHAR]]
         sta row_start
         lda #>[screen_mem_hi+[[ROWS-1]*COLUMNS*BYTES_PER_CHAR]]
@@ -72,7 +73,7 @@ initialise_cells_automata4:
         // clear  and initailise src buffer
         ldy #[box_check-box_origin]
         lda [boxRandom+jmp_header_size],Y
-        cmp #0
+        cmp #1
         beq _random_init4              
 
 _one_cell_init4:      

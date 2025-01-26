@@ -15,6 +15,7 @@
 #import "lib/gui.asm"
 #import "lib/screenModes.asm"
 #import "lib/render4.asm"
+#import "lib/scroll.asm"
 
 mainProg:
     cls()

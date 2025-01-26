@@ -20,7 +20,6 @@
 .const BUFFER_LENGTH=COLUMNS*PIXELS_PER_BYTE
 
 #import "lib/boxes.asm"
-#import "lib/scroll.asm"
 
 get:
         jsr construct
@@ -63,7 +62,7 @@ render_toggle:
         sta _chptr+1                
 
         loadObjectByte(box_check)
-        cmp #0
+        cmp #1
         beq !+
         lda #87        
         jmp !++
@@ -782,6 +781,8 @@ str_bord: .text "BRD"
 str_rnd: .text "RND"
 .byte 0
 str_ind: .text "IND"
+.byte 0
+str_scroll: .text "SCROLL"
 .byte 0
 str_automata: .text " 1D CELLULAR AUTOMATA "
 .byte 0

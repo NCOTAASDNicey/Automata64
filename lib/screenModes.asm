@@ -34,7 +34,16 @@ _enter_fullscreen:
         sta VIC_back_0
         lda [boxColB+jmp_header_size],Y        
         sta VIC_border
-       
+
+        ldy #[box_check-box_origin]
+        lda [boxScroll+jmp_header_size],Y
+        cmp #1
+        bne !+       
+        lda VIC_control_1
+        and #$F7            // 24 rows
+        sta VIC_control_1
+        jsr attachScrollIRQ
+ !:      
         lda VIC_control_mem //Point screen memory at $2000
         ora #$8
         sta VIC_control_mem
@@ -98,9 +107,19 @@ leave_fullscreen:
         lda VIC_control_mem //Point screen memory at $0400
         and #$F7
         sta VIC_control_mem
+
+        ldy #[box_check-box_origin]
+        lda [boxScroll+jmp_header_size],Y
+        cmp #1
+        bne !+       
+        lda VIC_control_1
+        ora #$0B             // Ensure 25 rows and scroll pos
+        sta VIC_control_1
+        jsr detachScrollIRQ
+ !:         
        
         lda VIC_control_1
-        and #$DF
+        and #$DB             // Exit multi mode clear bit 5
         sta VIC_control_1
 
         lda VIC_control_2

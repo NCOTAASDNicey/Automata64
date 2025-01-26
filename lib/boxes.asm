@@ -19,10 +19,6 @@ boxesVtable:
 exitboxesVtable:
      jsr doJumpTable 
     .word render, handlekey, get, select, deselect, exit, empty, empty, empty
-
-//confirmboxesVtable:
-//      jsr doJumpTable    
-//     .word render, handlekey, get, select, deselect, automata, empty, leave_fullscreen, continue
     
 confirmboxes4Vtable:
      jsr doJumpTable    
@@ -36,10 +32,6 @@ rule4IndexVtable:
      jsr doJumpTable    
     .word render, handlekeyi, get, select, deselect, empty, render_index, empty, empty       
     
-// binaryruleVtable:
-//      jsr doJumpTable
-//     .word render_ruleb, handlerulekeyb, get, select, deselect, update_ruleb, empty, empty, empty    
-
 bit4ruleVtable:
      jsr doJumpTable
     .word renderrule4, handlerulekey4, get, select, deselect, update_rule4, empty, empty, empty
@@ -72,36 +64,6 @@ title:
 .byte 0
 .byte 0
 
-/*    
-boxRun:
-  jmp confirmboxesVtable
-.byte [box_width_working-box_origin]-1
-.word box_origin
-.word screen_mem + 17 + [X_CHARS*0]
-.word colour_mem + 17 + [X_CHARS*0]
-.byte 18,2,5,5
-.byte selected_col,edge_col
-.word  style1
-.word str_run
-.byte 0
-.byte 0
-.byte 0
-
-boxRuleBinary:
-jmp binaryruleVtable
-.byte [box_width_working-box_origin]-1
-.word box_origin
-.word screen_mem + 0 + [X_CHARS*0]
-.word colour_mem + 0 + [X_CHARS*0]
-.byte 2,2,12,5
-.byte edge_col,edge_col
-.word  style3
-.word str_rule
-.byte 1
-.byte 0
-.byte 0
-*/
-
 
 boxRandom:
   jmp toggleBoxesVtable
@@ -114,16 +76,30 @@ boxRandom:
 .word style1
 .word str_rnd
 .byte 0
+.byte 1
 .byte 0
+
+boxScroll:
+  jmp toggleBoxesVtable
+.byte [box_width_working-box_origin]-1
+.word box_origin
+.word screen_mem + 8 + [X_CHARS*6]
+.word colour_mem + 8 + [X_CHARS*6]
+.byte 7,5,3,3
+.byte selected_col,edge_col
+.word style1
+.word str_scroll
+.byte 0
+.byte 1
 .byte 0
 
 boxColB:
   jmp colourboxesVtable
 .byte [box_width_working-box_origin]-1
 .word box_origin
-.word screen_mem + 7 + [X_CHARS*6]
-.word colour_mem + 7 + [X_CHARS*6]
-.byte 7,5,3,3
+.word screen_mem + 14 + [X_CHARS*6]
+.word colour_mem + 14 + [X_CHARS*6]
+.byte 14,5,3,3
 .byte green,edge_col
 .word style3
 .word str_back
@@ -135,9 +111,9 @@ boxColR:
   jmp colourboxesVtable
 .byte [box_width_working-box_origin]-1
 .word box_origin
-.word screen_mem + 11 + [X_CHARS*6]
-.word colour_mem + 11 + [X_CHARS*6]
-.byte 11,5,3,3
+.word screen_mem + 19 + [X_CHARS*6]
+.word colour_mem + 19 + [X_CHARS*6]
+.byte 19,5,3,3
 .byte red,edge_col
 .word style3
 .word str_bord
@@ -149,9 +125,9 @@ boxColP:
   jmp colourboxesVtable
 .byte [box_width_working-box_origin]-1
 .word box_origin
-.word screen_mem + 15 + [X_CHARS*6]
-.word colour_mem + 15 + [X_CHARS*6]
-.byte 15,5,3,3
+.word screen_mem + 23 + [X_CHARS*6]
+.word colour_mem + 23 + [X_CHARS*6]
+.byte 23,5,3,3
 .byte yellow,edge_col
 .word style3
 .word str_pen
@@ -163,9 +139,9 @@ boxColA:
   jmp colourboxesVtable
 .byte [box_width_working-box_origin]-1
 .word box_origin
-.word screen_mem + 19 + [X_CHARS*6]
-.word colour_mem + 19 + [X_CHARS*6]
-.byte 19,5,3,3
+.word screen_mem + 27 + [X_CHARS*6]
+.word colour_mem + 27 + [X_CHARS*6]
+.byte 27,5,3,3
 .byte blue,edge_col
 .word style3
 .word str_aux
@@ -243,6 +219,6 @@ boxFinal:
 .byte 0
 .byte 0
 
-.var boxesList = List().add(flow,title,boxRandom,boxColB,boxColR,boxColP,boxColA,boxRule4Index,boxRuleBit4,boxRun4,boxExit)
+.var boxesList = List().add(flow,title,boxRandom,boxScroll,boxColB,boxColR,boxColP,boxColA,boxRule4Index,boxRuleBit4,boxRun4,boxExit)
 
 .const boxes_list_size = boxesList.size() //Update this when you add more boxes

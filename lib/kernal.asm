@@ -134,3 +134,6 @@
 .const zero_page_free4=    254
 .const chrout_colour=      $286
 
+.const CINV=$0314 // Hardware interrupt vector
+.const JIFFY_CLOCK=$A0
+
