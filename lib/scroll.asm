@@ -1,4 +1,4 @@
-.const JIFFY_MASK = 7
+.const JIFFY_MASK = 3
 
 vectorCache: .word 0
 

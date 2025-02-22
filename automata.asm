@@ -1,6 +1,6 @@
 #import "lib/kernal.asm"
-#import "macros.asm"
-#import "zero.asm"
+#import "lib/macros.asm"
+#import "lib/zero.asm"
 
 :BasicUpstart2(mainProg)
         * = $840

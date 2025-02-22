@@ -361,26 +361,23 @@ handlekey:
 
         !:     lda #0 //Dont signal program end
         rts
-
-handlerulekeyb:
-        jsr construct
-        loadObjectByteY(box_select)
-        beq !+
-        lda keypress
-        cmp #48
-        bcc !+
-        cmp #56
-        bcs !+
-        ldy #method_action
-        jsr reinvokevirtual
-!:      lda #0 //Dont signal program end
-        rts
         
 handlerulekey4:
         jsr construct
         loadObjectByteY(box_select)
         beq !+++
         lda keypress
+        cmp #KEY_CSR_UP
+        bne !+
+        jsr handlekeyi
+        jmp !++++
+
+        cmp #KEY_CSR_DOWN
+        bne !+
+        jsr handlekeyi
+        jmp !++++        
+
+!:      
         cmp #48
         bcc !+
         cmp #58
@@ -455,7 +452,7 @@ handlekeyc:
 !:      lda (this),Y
         clc
         adc #1
-        !:       and #15
+!:      and #15
         sta (this),Y
         lda #1
         saveObjectByte(box_edited)
@@ -491,6 +488,37 @@ handlekeyi:
         sec
         sbc #1
         jmp !--
+
+
+handlekeyl:
+        jsr construct        
+        lda SHFLAG
+        and #$01
+        beq !+        
+        offsetFromThis(box_colour)
+        jmp !++
+!:      offsetFromThis(box_colour_working)
+!:      lda keypress
+        cmp #KEY_CSR_UP
+        beq !++
+        cmp #KEY_CSR_DOWN
+        beq !+++
+!:      lda #0 //Dont signal program end
+        jmp handlekey
+!:      
+        lda (this),Y
+        clc
+        adc #1
+        and #$0F
+        sta (this),Y
+        jmp !--
+!:      
+        lda (this),Y
+        sec
+        sbc #1
+        and #$0f
+        sta (this),y
+        jmp !---       
         
 writeBank:
         pha

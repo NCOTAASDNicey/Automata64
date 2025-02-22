@@ -3,7 +3,7 @@
     "description": "Project automata64",
     "toolkit": "kick",
     "sources": [
-        "automata.asm"
+        "fs.asm"
     ],
     "build": "debug",
     "definitions": [],

@@ -40,10 +40,16 @@
         jsr invokevirtual           
 }
 
+
+
+.macro offsetFromThis(obj) {
+        ldy #[obj-box_origin]
+}
+
 // 1 - offset from this
 // 2 - target zero page pointer
 .macro loadObjectPointer(obj,ptr) {
-        ldy #[obj-box_origin]
+        offsetFromThis(obj)
         lda (this),Y
         sta ptr
         iny
@@ -53,20 +59,19 @@
 
 // 1 - offset from this
 .macro loadObjectByte(obj) {
-        ldy #[obj-box_origin]
+        offsetFromThis(obj)
         lda (this),Y
 }
 
 // 1 - offset from this
 .macro saveObjectByte(obj) {
-        ldy #[obj-box_origin]
+        offsetFromThis(obj)
         sta (this),Y
 }
 
 // 1 - offset from this
 .macro loadObjectByteY(obj) {
-        ldy #[obj-box_origin]
-        lda (this),Y
+        loadObjectByte(obj)
         tay
 }
 

@@ -24,11 +24,13 @@ box_legend: .word 0
 box_select: .byte 0
 box_check: .byte 0
 box_edited: .byte 0
+box_data_end:
 
+.const BOX_DATA_SIZE = [box_data_end - box_origin]-1
 
 box_width_working: .byte 0
 box_height_working: .byte 0
 box_colour_working: .byte 0
 
 // args for flow
-keys_pressed: .byte 0 
+keys_pressed: .byte 0
