@@ -33,22 +33,61 @@ loop:	sta $0400,x
 	}
 }
 
+.function render(pixels){
+	// Convert to byteStream
+	.var result = List()
+	.for (var charY=0; charY<25; charY++)
+	{
+		.for (var charX=0; charX<40; charX++)
+		{
+			.for (var charRow=0; charRow<8; charRow++)
+			{
+				.var byte = 0
+				.var idx = charX*8 + (charY*8+charRow)*320
+				.for (var pixelNo=0; pixelNo<8; pixelNo++)
+				{
+					.eval byte=byte*2+(pixels.get(idx+pixelNo) == 255?1:0)
+				}
+				.eval result.add(byte)
+			}
+		}
+	}
+	.return result
+}
+
+.function fs48(errors,x,y,e) {
+	.eval setPixel(errors,x+1,y,e *7/48)
+	.eval setPixel(errors,x+2,y,e *5/48)
+
+	.eval setPixel(errors,x-2,y+1,e *3/48)			
+	.eval setPixel(errors,x-1,y+1,e *5/48)			
+	.eval setPixel(errors,x,y+1,e *7/48)			
+	.eval setPixel(errors,x+1,y+1,e *5/48)			
+	.eval setPixel(errors,x+2,y+1,e *3/48)			
+	
+	.eval setPixel(errors,x-2,y+2,e *1/48)			
+	.eval setPixel(errors,x-1,y+2,e *3/48)			
+	.eval setPixel(errors,x,y+2,e *5/48)			
+	.eval setPixel(errors,x+1,y+2,e *3/48)			
+	.eval setPixel(errors,x+2,y+2,e *1/48)	
+}
+
 .function floydSteinberg(filename) {
 	.var width=320
 	.var height=200
 	.const total=width*height
 
 	.var errors=List(total);
-	.var dithered=List(total);
-	.var picture = LoadPicture(filename);
 	.for (var i=0;i<total;i++)
 		.eval errors.set(i,0);		
 
+	.var picture = LoadPicture(filename);
+	.var dithered=List(total);
 	.for (var y=0; y<height; y++) {
 		.for (var x=0; x<width; x++) {
 			.var idx=x+y*width
 			.var rgb = picture.getPixel(x,y)
-			.var grey = floor((rgb>>0)&$ff * 0.299) + floor((rgb>>8)&$ff * 0.587) + floor((rgb>>16)&$ff * 0.114)
+			.var grey = floor(((rgb>>0)&$ff * 0.299) + ((rgb>>8)&$ff * 0.587) + ((rgb>>16)&$ff * 0.114))
 			.eval grey -= errors.get(idx)
 			.var e=0;
 			.if (grey < 128 ){
@@ -59,32 +98,9 @@ loop:	sta $0400,x
 				.eval grey=255
 			}
 			.eval dithered.set(idx,grey)
-			.eval setPixel(errors,x+1,y,e *7/16)
-			.eval setPixel(errors,x-1,y+1,e *3/16)			
-			.eval setPixel(errors,x,y+1,e *5/16)			
-			.eval setPixel(errors,x+1,y+1,e *1/16)
-								
+			.eval fs48(errors,x,y,e)							
 		}
 	}
-	
-	// Convert to byteStream
-	.var result = List()
-	.for (var charY=0; charY<25; charY++)
-	{
-		.for (var charX=0; charX<40; charX++)
-		{
-			.for (var charRow=0; charRow<8; charRow++)
-			{
-				.var byte = 0
-				.var idx = charX*8 + (charY*8+charRow)*width
-				.for (var pixelNo=0; pixelNo<8; pixelNo++)
-				{
-					.eval byte=byte*2+(dithered.get(idx+pixelNo) == 255?1:0)
-				}
-				.eval result.add(byte)
-			}
-		}
-	}
-	.return result
+	.return render(dithered)
 }
 
