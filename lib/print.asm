@@ -1,3 +1,8 @@
+.macro str(_s) {
+        .text _s
+        .byte 0
+}
+
 .macro print(str,col,reverse) {
         pha
         txa

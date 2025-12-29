@@ -90,11 +90,23 @@ _random_init4:
         lda $A2
         clc
         ldy #[PIXELS_PER_BYTE*COLUMNS]                
-!:      adc 0,Y
+!:      random()
         pha
         and #03
         sta (_tempptr),Y
         pla
+        dey
+        bne !-
+
+_random_rule:
+        ldy #[box_check-box_origin]
+        lda [boxRR+jmp_header_size],Y
+        beq _render_automata_row4
+
+        ldy #(RULE_LENGTH-1)
+!:      random()
+        and #03
+        sta rule4,Y
         dey
         bne !-
                               

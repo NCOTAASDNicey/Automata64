@@ -87,7 +87,10 @@ boxRandom:
 box(toggleBoxesVtable,str_rnd,grp2,row1,3,3,0,-1,selected_col,edge_col,style1,1)
 
 boxScroll:
-box(toggleBoxesVtable,str_scroll,grp2+6,row1,3,3,-1,-1,selected_col,edge_col,style1,1)
+box(toggleBoxesVtable,str_scroll,grp2+6,row1,3,3,-2,-1,selected_col,edge_col,style1,0)
+
+boxRR:
+box(toggleBoxesVtable,str_rndr,grp2+14,row1,3,3,-3,-1,selected_col,edge_col,style1,0)
 
 boxColB:
 box(colourboxesVtable,str_back,grp3,row1,3,3,0,-1,green,edge_col,style3,0)
@@ -107,6 +110,6 @@ box(exitboxesVtable,str_exit,32,22,8,3,2,1,selected_col,edge_col,style1,0)
 boxFinal:
 box(boxesVtable,0,1,1,X_CHARS-2,Y_CHARS-2,2,2,edge_col,red,style2,0)
 
-.var boxesList = List().add(flow,boxRule4Index,boxRuleBit4,boxRun4,boxRandom,boxScroll,boxColB,boxColR,boxColP,boxColA,boxExit,title)
+.var boxesList = List().add(flow,boxRule4Index,boxRuleBit4,boxRun4,boxRandom,boxScroll,boxRR,boxColB,boxColR,boxColP,boxColA,boxExit,title)
 
 .const boxes_list_size = boxesList.size()

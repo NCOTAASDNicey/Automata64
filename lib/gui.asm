@@ -18,6 +18,8 @@
 .const PIXELS_PER_BYTE=4
 .const BYTES_PER_CHAR=8
 .const BUFFER_LENGTH=COLUMNS*PIXELS_PER_BYTE
+.const RULE_LENGTH=10
+
 
 #import "lib/boxes.asm"
 
@@ -794,32 +796,19 @@ boxes:
         .word boxesList.get(i)
 }
 
-str_exit: .text "EXIT"
-.byte 0
-str_run: .text "RUN"
-.byte 0
-str_back: .text "BCK"
-.byte 0
-str_pen: .text "PEN"
-.byte 0
-str_aux: .text "AUX"
-.byte 0
-str_bord: .text "BRD"
-.byte 0
-str_rnd: .text "RND"
-.byte 0
-str_ind: .text "IND"
-.byte 0
-str_scroll: .text "SCROLL"
-.byte 0
-str_automata: .text " 1D CELLULAR AUTOMATA "
-.byte 0
-str_filenameL: .text "RULE"
-.byte 0
-str_filenameS: .text "str_0:RULE"
-.byte 0
-str_rule: .text "********"
-.byte 0
-str_rule4: .text "**********"
-.byte 0
+str_exit: str("EXIT")
+str_run: str("RUN")
+str_back: str("BCK")
+str_pen: str("PEN")
+str_aux: str("AUX")
+str_bord: str("BRD")
+str_rnd: str("RND")
+str_rndr: str("RND-RULE")
+str_ind: str("IND")
+str_scroll: str("SCROLL")
+str_automata: str(" 1D CELLULAR AUTOMATA ")
+str_filenameL: str("RULE")
+str_filenameS: str("str_0:RULE")
+str_rule: str("********")
+str_rule4: str("**********")
 

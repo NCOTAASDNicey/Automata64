@@ -1,13 +1,11 @@
 {
-    "name": "automata64",
-    "description": "Project automata64",
-    "toolkit": "kick",
-    "sources": [
-        "fs.asm"
-    ],
-    "build": "debug",
-    "definitions": [],
-    "includes": [],
-    "args": [],
-    "compiler": ""
+  "name": "automata64",
+  "description": "Project automata64",
+  "toolkit": "kick",
+  "sources": ["automata.asm"],
+  "build": "debug",
+  "definitions": [],
+  "includes": [],
+  "args": [],
+  "compiler": ""
 }

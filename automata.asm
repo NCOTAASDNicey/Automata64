@@ -17,8 +17,21 @@
 #import "lib/render4.asm"
 #import "lib/scroll.asm"
 
+initRandom:
+    lda #$FF  // maximum frequency value
+    sta $D40E // voice 3 frequency low byte
+    sta $D40F // voice 3 frequency high byte
+    lda #$80  // noise waveform, gate bit off
+    sta $D412 // voice 3 control register
+    rts
+
+.macro random() {
+    lda $D41B
+}    
+
 mainProg:
     cls()
+    jsr initRandom
     screen_col(gui_back_col, gui_bor_col)
     lda #0
     sta scrmode
@@ -51,6 +64,5 @@ waitkey:
      rts          
 
 
+message: str("WOO YAY")
 
-message: .text "WOO YAY"
-.byte 0
