@@ -35,10 +35,8 @@ _enter_fullscreen:
         lda [boxColB+jmp_header_size],Y        
         sta VIC_border
 
-        ldy #[box_check-box_origin]
-        lda [boxScroll+jmp_header_size],Y
-        cmp #1
-        bne !+       
+        isBoxChecked(boxScroll)
+        beq !+       
         lda VIC_control_1
         and #$F7            // 24 rows
         sta VIC_control_1
@@ -108,10 +106,8 @@ leave_fullscreen:
         and #$F7
         sta VIC_control_mem
 
-        ldy #[box_check-box_origin]
-        lda [boxScroll+jmp_header_size],Y
-        cmp #1
-        bne !+       
+        isBoxChecked(boxScroll)
+        beq !+       
         lda VIC_control_1
         ora #$0B             // Ensure 25 rows and scroll pos
         sta VIC_control_1

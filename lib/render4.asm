@@ -71,10 +71,8 @@ initialise_ptrs_automata4:
 
 initialise_cells_automata4:     
         // clear  and initailise src buffer
-        ldy #[box_check-box_origin]
-        lda [boxRandom+jmp_header_size],Y
-        cmp #1
-        beq _random_init4              
+        isBoxChecked(boxRandom)
+        bne _random_init4              
 
 _one_cell_init4:      
         ldy #[PIXELS_PER_BYTE*COLUMNS]       
@@ -99,8 +97,7 @@ _random_init4:
         bne !-
 
 _random_rule:
-        ldy #[box_check-box_origin]
-        lda [boxRR+jmp_header_size],Y
+        isBoxChecked(boxRR)
         beq _render_automata_row4
 
         ldy #(RULE_LENGTH-1)

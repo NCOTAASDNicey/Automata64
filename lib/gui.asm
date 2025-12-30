@@ -63,9 +63,8 @@ render_toggle:
         adc #0 
         sta _chptr+1                
 
-        loadObjectByte(box_check)
-        cmp #1
-        beq !+
+        isThisBoxChecked()
+        bne !+
         lda #87        
         jmp !++
 !:      lda #81
@@ -81,9 +80,7 @@ render:
         rts
 !:      lda box_height
         sta box_height_working
-
-        loadObjectByte(box_select)
-        cmp #0
+        isThisBoxSelected()
         beq _notselected
         lda #<style2
         sta _styleptr
@@ -340,7 +337,7 @@ renderrule4:
         
 handlekey:
         jsr construct
-        loadObjectByteY(box_select)
+        isThisBoxSelected()
         beq !+++
 
         lda #KEY_RETURN
@@ -366,7 +363,7 @@ handlekey:
         
 handlerulekey4:
         jsr construct
-        loadObjectByteY(box_select)
+        isThisBoxSelected()
         beq !+++
         lda keypress
         cmp #KEY_CSR_UP
@@ -441,7 +438,7 @@ handlerulekey4:
         
 handlekeyc:
         jsr construct
-        loadObjectByteY(box_select)
+        isThisBoxSelected()
         beq !+
         ldy #[box_colour-box_origin]
         lda keypress
@@ -466,7 +463,7 @@ handlekeyc:
 
 handlekeyi:
         jsr construct
-        loadObjectByteY(box_select)
+        isThisBoxSelected()
         beq !++
         ldy #[box_check-box_origin]
         lda keypress

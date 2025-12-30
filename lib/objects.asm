@@ -69,9 +69,16 @@
         sta (this),Y
 }
 
-// 1 - offset from this
-.macro loadObjectByteY(obj) {
-        loadObjectByte(obj)
-        tay
+.macro isThisBoxSelected() {
+        loadObjectByte(box_select)        
 }
+
+.macro isThisBoxChecked() {
+        loadObjectByte(box_check)        
+}
+
+.macro isBoxChecked(box) {
+        lda [box+jmp_header_size+[box_check-box_origin]]        
+}
+
 
