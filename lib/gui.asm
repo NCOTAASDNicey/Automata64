@@ -1,7 +1,7 @@
 #import "lib/data.asm"
 #import "lib/objects.asm"
 
-.const DEVICE=10
+.const DEVICE=9
 .const FILENO=1
 .const top = 0
 .const bottom = 1
@@ -34,24 +34,22 @@ select:
         ldy #[box_select-box_origin]
         lda #1
         sta (this),Y
-        lda #0
-        rts
+        jmp empty
         
 deselect:
         jsr construct
         ldy #[box_select-box_origin]
         lda #0
         sta (this),Y
-        lda #0        
-        rts
-                       
+        jmp empty
+                     
 toggle:
         jsr construct
         loadObjectByte(box_check)
         eor #1
         sta (this),Y
-        lda #0
-        rts
+        jmp empty
+
         
 render_toggle:
         jsr construct
@@ -70,14 +68,14 @@ render_toggle:
 !:      lda #81
 !:      ldy #0
         sta (_chptr),Y
-        lda #0
-        rts
+        jmp empty
+
 render:
         jsr construct
         lda scrmode
         beq !+
-        lda #0
-        rts
+        jmp empty
+
 !:      lda box_height
         sta box_height_working
         isThisBoxSelected()
@@ -232,8 +230,8 @@ _mid:   clc
         lda box_legend
         ldx box_legend+1
         jsr printstr
-!:      lda #0
-        rts        
+!:      jmp empty
+       
         
 _colframe:
         lda box_colour_working
@@ -365,34 +363,23 @@ handlerulekey4:
         jsr construct
         isThisBoxSelected()
         beq !+++
-        lda keypress
-        cmp #KEY_CSR_UP
-        bne !+
-        jsr handlekeyi
-        jmp !++++
-
-        cmp #KEY_CSR_DOWN
-        bne !+
-        jsr handlekeyi
-        jmp !++++        
-
-!:      
-        cmp #48
+        lda keypress   
+        
+        cmp #48 // Numeric key
         bcc !+
         cmp #58
         bcs !+
+
         ldy #method_action
         jsr reinvokevirtual
         jsr construct
         lda #1
         saveObjectByte(box_edited)
-        lda #0 //Dont signal program end
-        rts
+        jmp empty
                 
 !:      cmp #83 //S for Save
         bne !+
-        
-        //JSR writeBank
+
         lda #FILENO
         ldx #DEVICE
         ldy #1
@@ -401,7 +388,10 @@ handlerulekey4:
         lda #[str_rule-str_filenameS]
         ldx #<str_filenameS
         ldy #>str_filenameS
-        jsr setnam
+        jsr setnam    
+
+        lda #$C0
+        jsr setmsg
 
         lda #<rule4bank
         sta _chptr
@@ -411,13 +401,16 @@ handlerulekey4:
         ldy #>rule4bankend
         lda #_chptr
         jsr save
+        bcc !+
+        jmp showErrorCode
+!:
         lda #0
         saveObjectByte(box_edited)
-        lda #0 //Dont signal program end
-        rts
+        jmp empty
+
         
 !:      cmp #76 //L for Load
-        bne !+
+        bne !++
 
         lda #FILENO
         ldx #DEVICE
@@ -432,177 +425,121 @@ handlerulekey4:
         lda #0      //Load
         ldx #<rule4bank
         ldy #>rule4bank
-        jsr load                
-!:      lda #0 //Dont signal program end
-        rts    
+        jsr load
+        bcc !+
+        jmp showErrorCode
+!:
+        jsr writeBank
+!:      jmp empty
+  
         
-handlekeyc:
+handlekeyc:{
         jsr construct
         isThisBoxSelected()
-        beq !+
-        ldy #[box_colour-box_origin]
+        beq done
         lda keypress
         cmp #KEY_CSR_UP
-        beq !++
+        beq increment
         cmp #KEY_CSR_DOWN
-        beq !++++
-!:      lda #0 //Dont signal program end
-        rts
-!:      lda (this),Y
+        beq decrement
+done:   jmp empty
+
+increment:      
+        loadObjectByte(box_colour)
         clc
         adc #1
-!:      and #15
-        sta (this),Y
+wrap:   and #15
+        saveObjectByte(box_colour)
         lda #1
         saveObjectByte(box_edited)
-        jmp !---
-!:      lda (this),Y
+        jmp done
+decrement:
+        loadObjectByte(box_colour)
         sec
         sbc #1
-        jmp !--
+        jmp wrap
+}
 
-handlekeyi:
+handlekeyi: {
         jsr construct
         isThisBoxSelected()
-        beq !++
-        ldy #[box_check-box_origin]
+        beq done
+
         lda keypress
         cmp #KEY_CSR_UP
-        beq !+++
+        beq increment
         cmp #KEY_CSR_DOWN
-        beq !+++++
-        jmp !++
-!:      jsr rdBank
-!:      lda #0 //Dont signal program end
-        rts
-!:      lda (this),Y
+        beq decrement
+        jmp done
+read:   jsr rdBank
+done:   jmp empty
+
+
+increment:
+        loadObjectByte(box_check)
         jsr writeBank
         clc
         adc #1
-!:      and #$0F
-        sta (this),Y
-        jmp !----
-!:      lda (this),Y
-        jsr writeBank
-        sec
-        sbc #1
-        jmp !--
-
-
-handlekeyl:
-        jsr construct        
-        lda SHFLAG
-        and #$01
-        beq !+        
-        offsetFromThis(box_colour)
-        jmp !++
-!:      offsetFromThis(box_colour_working)
-!:      lda keypress
-        cmp #KEY_CSR_UP
-        beq !++
-        cmp #KEY_CSR_DOWN
-        beq !+++
-!:      lda #0 //Dont signal program end
-        jmp handlekey
-!:      
-        lda (this),Y
-        clc
-        adc #1
+wrapnread:
         and #$0F
-        sta (this),Y
-        jmp !--
-!:      
-        lda (this),Y
+        saveObjectByte(box_check)
+        jmp read
+
+decrement:
+        loadObjectByte(box_check)
+        jsr writeBank
         sec
         sbc #1
-        and #$0f
-        sta (this),y
-        jmp !---       
-        
-writeBank:
-        pha
-        tya
-        pha
-        txa
-        pha
-        
+        jmp wrapnread
+}
+
+_bankPtrs:
+        clc
+        asl
+        asl
+        asl
+        asl
+        sta SAREG
         lda #<rule4bank
         sta _chptr
         lda #>rule4bank
         sta _chptr+1
-        lda rule4index
         clc
-        asl
-        asl
-        asl
-        asl
-        adc _chptr
+        lda _chptr
+        adc SAREG
         sta _chptr
-        lda #0
-        adc _chptr+1
-        sta _chptr+1 
+        lda _chptr+1
+        adc #0
+        sta _chptr+1
 
         lda #<rule4
         sta _tempptr
         lda #>rule4
-        sta _tempptr+1        
-          
+        sta _tempptr+1
+        rts
+        
+writeBank:
+        enterProc()
+        jsr _bankPtrs          
         ldy #10
 !:      dey
         lda (_tempptr),Y
         sta (_chptr),Y
         cpy #0     
-        bne !-    
-        
-        pla
-        tax
-        pla
-        tay
-        pla
+        bne !-
+        leaveProc()
         rts     
 
 rdBank:
-        pha
-        sta _scratch
-        tya
-        pha
-        txa
-        pha
-
-        lda #<rule4bank
-        sta _chptr
-        lda #>rule4bank
-        sta _chptr+1
-        lda _scratch
-        clc
-        asl
-        asl
-        asl
-        asl
-        adc _chptr
-        sta _chptr
-        lda#0
-        adc _chptr+1
-        sta _chptr+1 
-
-
-        lda #<rule4
-        sta _tempptr
-        lda #>rule4
-        sta _tempptr+1        
-
+        enterProc()
+        jsr _bankPtrs
         ldy #10
 !:      dey
         lda (_chptr),Y
         sta (_tempptr),Y
         cpy #0
         bne !-
-
-        pla
-        tax
-        pla
-        tay
-        pla
+        leaveProc()
         rts               
         
 render_index:
@@ -624,8 +561,8 @@ render_index:
 !:      adc #48
 !:      ldy #0
         sta (_chptr),Y
-        lda #0
-        rts               
+        jmp empty
+              
                                             
 flowKey:
         lda keypress  
@@ -653,8 +590,8 @@ _key_handledf:
         lda #1
 !:      sta selected
         jsr _boxListAt
-!:      lda #0 //Don't signal exit
-        rts
+!:      jmp empty
+
 
 _boxlist:
         ldy #0
@@ -711,8 +648,16 @@ construct:
         bpl !-
         rts
 
+showErrorCode:
+        ldy #0
+        ldx #24
+        clc
+        jsr plot
+        printhexProg(red,0)
+        jmp empty
+
 doJumpTable:
-        sta _scratch
+        sta SAREG
         pla
         sta _tempptr
         pla
@@ -726,7 +671,7 @@ doJumpTable:
         iny
         lda (_tempptr), y
         sta _target+1
-        lda _scratch
+        lda SAREG
         jmp (_target)
              
             
@@ -804,8 +749,8 @@ str_rndr: str("RND-RULE")
 str_ind: str("IND")
 str_scroll: str("SCROLL")
 str_automata: str(" 1D CELLULAR AUTOMATA ")
-str_filenameL: str("RULE")
-str_filenameS: str("str_0:RULE")
+str_filenameL: str("RULE,S,R")
+str_filenameS: str("@0:RULE,S,W")
 str_rule: str("********")
 str_rule4: str("**********")
 

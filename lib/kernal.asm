@@ -137,4 +137,5 @@
 .const SHFLAG=$028D
 .const CINV=$0314 // Hardware interrupt vector
 .const JIFFY_CLOCK=$A0
+.const SAREG=$30C
 

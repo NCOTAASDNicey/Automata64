@@ -12,16 +12,13 @@
 
 .const  jmp_header_size = 6
 
-.macro callInstanceMethod(m,i) {
+.macro chainInstanceMethod(m,i) {
         // _1 Method
         // _2 Instance
-        // V table Method
-        lda #m
-        sta method
-        // Box instance
+        ldy #m
         lda #<i
         ldx #>i       
-        jsr invokevirtual
+        jmp invokevirtual
 }
 
 
