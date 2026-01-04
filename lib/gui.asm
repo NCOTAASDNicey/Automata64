@@ -161,7 +161,6 @@ _mid:   clc
         sta (_chptr),y
  
 //Fill in colour
-
         lda box_col_origin
         sta _chptr
         lda box_col_origin+1
@@ -529,25 +528,25 @@ flowKey:
         cmp #KEY_CSR_LEFT
         bne _not_leftf
         dec selected
+        bpl _key_handledf
+        lda #boxes_list_size-3
+        sta selected
         jmp _key_handledf
 _not_leftf:
         cmp #KEY_CSR_RIGHT
-        bne !+++
-        inc selected   
-    
+        bne !+
+        inc selected
+        lda selected
+        cmp #boxes_list_size-2
+        bcc _key_handledf
+        lda #0
+        sta selected       
+
 _key_handledf:
         callMethod(method_deselect, _boxlist)
         lda #method_select
         sta method
         lda selected
-        cmp #0
-        bne !+
-        lda #boxes_list_size-1
-        jmp !++
-!:      cmp #boxes_list_size
-        bne !+
-        lda #1
-!:      sta selected
         jsr _boxListAt
 !:      jmp empty
 

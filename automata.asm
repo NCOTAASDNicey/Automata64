@@ -40,7 +40,6 @@ mainProg:
     lda #0
     sta scrmode
     sta return
-    lda #1
     sta selected
     jsr _key_handledf
     callMethod(method_render, _boxlist)    
