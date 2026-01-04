@@ -106,6 +106,7 @@ _random_rule:
         sta rule4,Y
         dey
         bne !-
+        markBoxEdited(boxRuleBit4)
                               
 _render_automata_row4:
         clc

@@ -1,8 +1,3 @@
-#import "lib/data.asm"
-#import "lib/objects.asm"
-
-.const DEVICE=9
-.const FILENO=1
 .const top = 0
 .const bottom = 1
 .const right = 2
@@ -19,9 +14,6 @@
 .const BYTES_PER_CHAR=8
 .const BUFFER_LENGTH=COLUMNS*PIXELS_PER_BYTE
 .const RULE_LENGTH=10
-
-
-#import "lib/boxes.asm"
 
 get:
         jsr construct
@@ -363,6 +355,12 @@ handlerulekey4:
         jsr construct
         isThisBoxSelected()
         beq !+++
+
+        ldx #17
+        ldy #0
+        clc
+        jsr plot
+
         lda keypress   
         
         cmp #48 // Numeric key
@@ -379,57 +377,18 @@ handlerulekey4:
                 
 !:      cmp #83 //S for Save
         bne !+
-
-        lda #FILENO
-        ldx #DEVICE
-        ldy #1
-        jsr setlfs
-
-        lda #[str_rule-str_filenameS]
-        ldx #<str_filenameS
-        ldy #>str_filenameS
-        jsr setnam    
-
-        lda #$C0
-        jsr setmsg
-
-        lda #<rule4bank
-        sta _chptr
-        lda #>rule4bank
-        sta _chptr+1
-        ldx #<rule4bankend
-        ldy #>rule4bankend
-        lda #_chptr
-        jsr save
-        bcc !+
-        jmp showErrorCode
-!:
+        isBoxChecked(boxRule4Index)
+        jsr writeBank        
+        jsr saveRule
         lda #0
         saveObjectByte(box_edited)
         jmp empty
-
         
 !:      cmp #76 //L for Load
-        bne !++
-
-        lda #FILENO
-        ldx #DEVICE
-        ldy #1
-        jsr setlfs
-
-        lda #[str_filenameS-str_filenameL]
-        ldx #<str_filenameL
-        ldy #>str_filenameL
-        jsr setnam
-
-        lda #0      //Load
-        ldx #<rule4bank
-        ldy #>rule4bank
-        jsr load
-        bcc !+
-        jmp showErrorCode
-!:
-        jsr writeBank
+        bne !+
+        jsr loadRule
+        isBoxChecked(boxRule4Index)
+        jsr rdBank
 !:      jmp empty
   
         
@@ -731,9 +690,7 @@ rule4bank:
 .byte 3,3,3, 3,3,3, 3,3,3, 3, 6,5,7,2,0,0
 rule4bankend:
 
-
 boxes:
-
 .for (var i=0; i<boxesList.size(); i++) {
         .word boxesList.get(i)
 }
@@ -749,8 +706,6 @@ str_rndr: str("RND-RULE")
 str_ind: str("IND")
 str_scroll: str("SCROLL")
 str_automata: str(" 1D CELLULAR AUTOMATA ")
-str_filenameL: str("RULE,S,R")
-str_filenameS: str("@0:RULE,S,W")
 str_rule: str("********")
 str_rule4: str("**********")
 

@@ -78,4 +78,9 @@
         lda [box+jmp_header_size+[box_check-box_origin]]        
 }
 
+.macro markBoxEdited(box) {
+        lda #1
+        sta [box+jmp_header_size+[box_edited-box_origin]]        
+}
+
 

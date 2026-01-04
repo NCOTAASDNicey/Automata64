@@ -42,7 +42,6 @@
 .const	vector=		$ff8d
 
 //VIC_II Registers
-
 .const VIC_sprite_0_x=   $D000
 .const VIC_sprite_0_y=   $D001
 .const VIC_sprite_1_x=   $D002
@@ -108,7 +107,6 @@
 
 
 // Character codes for the colors.
-
 .const black=        0
 .const white=        1
 .const red=          2

@@ -11,11 +11,15 @@
 .const gui_bor_col=gray_3
 
 
+#import "lib/data.asm"
+#import "lib/objects.asm"
 #import "lib/print.asm"
+#import "lib/boxes.asm"
 #import "lib/gui.asm"
 #import "lib/screenModes.asm"
 #import "lib/render4.asm"
 #import "lib/scroll.asm"
+#import "lib/file.asm"
 
 initRandom:
     lda #$FF  // maximum frequency value
