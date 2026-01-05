@@ -13,6 +13,11 @@ saveRule:
         lda #$C0
         jsr setmsg
 
+        ldx #17
+        ldy #0
+        clc
+        jsr plot        
+
         jsr renameBackupRule    // RULEBACKUP => RULEOLD
         jsr renameRuleRule      // RULE => RULEBACKUP
         jsr deleteRule          // RULEOLD => x

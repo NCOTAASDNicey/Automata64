@@ -78,8 +78,19 @@
         lda [box+jmp_header_size+[box_check-box_origin]]        
 }
 
+.macro toggleBoxChecked(box) {
+        lda [box+jmp_header_size+[box_check-box_origin]]
+        eor #$1
+        sta [box+jmp_header_size+[box_check-box_origin]]
+}
+
 .macro markBoxEdited(box) {
         lda #1
+        sta [box+jmp_header_size+[box_edited-box_origin]]        
+}
+
+.macro markBoxUnEdited(box) {
+        lda #0
         sta [box+jmp_header_size+[box_edited-box_origin]]        
 }
 

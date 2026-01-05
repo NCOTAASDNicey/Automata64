@@ -350,18 +350,12 @@ handlekey:
         !:     lda #0 //Dont signal program end
         rts
         
-handlerulekey4:
+handlerulekey4: 
         jsr construct
         isThisBoxSelected()
-        beq !+++
+        beq !+
 
-        ldx #17
-        ldy #0
-        clc
-        jsr plot
-
-        lda keypress   
-        
+        lda keypress           
         cmp #48 // Numeric key
         bcc !+
         cmp #58
@@ -372,25 +366,8 @@ handlerulekey4:
         jsr construct
         lda #1
         saveObjectByte(box_edited)
-        jmp empty
-                
-!:      cmp #83 //S for Save
-        bne !+
-        isBoxChecked(boxRule4Index)
-        jsr writeBank        
-        jsr saveRule
-        lda #0
-        saveObjectByte(box_edited)
-        jmp empty
-        
-!:      cmp #76 //L for Load
-        bne !+
-        jsr loadRule
-        isBoxChecked(boxRule4Index)
-        jsr rdBank
 !:      jmp empty
-  
-        
+
 handlekeyc:{
         jsr construct
         isThisBoxSelected()
@@ -548,7 +525,28 @@ _key_handledf:
         sta method
         lda selected
         jsr _boxListAt
+
+!:      cmp #83 //S for Save
+        bne !+
+        isBoxChecked(boxRule4Index)
+        jsr writeBank        
+        jsr saveRule
+        lda #0
+        markBoxUnEdited(boxRuleBit4)
+        jmp empty        
+
+!:      cmp #76 //L for Load
+        bne !+
+        jsr loadRule
+        isBoxChecked(boxRule4Index)
+        jsr rdBank
+        jmp empty        
+
+!:      cmp #82 //R for Random rule
+        bne !+
+        toggleBoxChecked(boxRR)                
 !:      jmp empty
+
 
 
 _boxlist:
