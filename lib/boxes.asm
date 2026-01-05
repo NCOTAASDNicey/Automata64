@@ -83,14 +83,11 @@ box(bit4ruleVtable,str_rule4,grp1+3,row2,14,5,2,2,edge_col,edge_col,style3,0)
 boxRun4:
 box(confirmboxes4Vtable,str_run,grp1+17,row2,5,5,1,2,selected_col,edge_col,style1,0)
 
-boxRandom:
-box(toggleBoxesVtable,str_rnd,grp2,row1,3,3,0,-1,selected_col,edge_col,style1,1)
+boxRR:
+box(toggleBoxesVtable,str_rnd,grp2,row1,3,3,0,-1,selected_col,edge_col,style1,0)
 
 boxScroll:
 box(toggleBoxesVtable,str_scroll,grp2+6,row1,3,3,-2,-1,selected_col,edge_col,style1,0)
-
-boxRR:
-box(toggleBoxesVtable,str_rndr,grp2+14,row1,3,3,-3,-1,selected_col,edge_col,style1,0)
 
 boxColB:
 box(colourboxesVtable,str_back,grp3,row1,3,3,0,-1,green,edge_col,style3,0)
@@ -107,6 +104,6 @@ box(colourboxesVtable,str_aux,grp3+12,row1,3,3,0,-1,blue,edge_col,style3,0)
 boxExit:
 box(exitboxesVtable,str_exit,32,22,8,3,2,1,selected_col,edge_col,style1,0)
 
-.var boxesList = List().add(boxRule4Index,boxRuleBit4,boxRun4,boxRandom,boxScroll,boxRR,boxColB,boxColR,boxColP,boxColA,boxExit,title,flow)
+.var boxesList = List().add(boxRule4Index,boxRuleBit4,boxRun4,boxRR,boxScroll,boxColB,boxColR,boxColP,boxColA,boxExit,title,flow)
 
 .const boxes_list_size = boxesList.size()

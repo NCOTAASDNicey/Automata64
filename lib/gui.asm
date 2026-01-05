@@ -544,7 +544,12 @@ _key_handledf:
 
 !:      cmp #82 //R for Random rule
         bne !+
-        toggleBoxChecked(boxRR)                
+        toggleBoxChecked(boxRR)
+
+!:      cmp #79 //O for Scroll
+        bne !+
+        toggleBoxChecked(boxScroll)         
+
 !:      jmp empty
 
 

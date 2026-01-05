@@ -71,20 +71,6 @@ initialise_ptrs_automata4:
 
 initialise_cells_automata4:     
         // clear  and initailise src buffer
-        isBoxChecked(boxRandom)
-        bne _random_init4              
-
-_one_cell_init4:      
-        ldy #[PIXELS_PER_BYTE*COLUMNS]       
-        lda #0
-!:      sta (_tempptr),Y
-        dey
-        bne !-
-        lda #03
-        sta cellbuffer1+[PIXELS_PER_BYTE*COLUMNS/2]
-        jmp  _render_automata_row4
-       
-_random_init4:
         lda $A2
         clc
         ldy #[PIXELS_PER_BYTE*COLUMNS]                
@@ -96,7 +82,6 @@ _random_init4:
         dey
         bne !-
 
-_random_rule:
         isBoxChecked(boxRR)
         beq _render_automata_row4
 
