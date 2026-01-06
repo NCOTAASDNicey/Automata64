@@ -57,6 +57,8 @@ _main_loop:
 done:
     cls()
     screen_col(lt_blue, blue)
+    lda #lt_blue
+    sta chrout_colour
     print(message)
     rts
 

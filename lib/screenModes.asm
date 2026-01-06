@@ -20,7 +20,10 @@ toggle_fullscreen:
 
 enter_fullscreen_multi:
         lda #1<<FULLSCREEN_BIT | 1<<MULTI_BIT
-        ora scrmode
+        cmp scrmode
+        bne !+
+        rts
+!:      ora scrmode
         sta scrmode
 _enter_multi_fullscreen:
         // Multi colour
