@@ -3,24 +3,40 @@
         .byte 0
 }
 
-.macro print(str,col,reverse) {
-        pha
-        txa
-        pha
-        tya
-        pha
-        lda #col
-        sta chrout_colour
-        lda #reverse
-        sta 199
+.macro printptr(str) {
+        lda str
+        ldx str+1
+        jsr printstr
+}
+
+.macro printptrat(str,col,row) {
+        clc
+        ldy #col
+        ldx #row
+        jsr plot        
+        printptr(str)
+}
+
+.macro printptratpos(str,col,row) {
+        clc
+        ldy col
+        ldx row
+        jsr plot        
+        printptr(str)
+}
+
+.macro print(str) {
         lda #<str
         ldx #>str        
         jsr printstr
-        pla
-        tay
-        pla
-        tax
-        pla
+}
+
+.macro printat(str,col,row) {
+        clc
+        ldy #col
+        ldx #row
+        jsr plot        
+        print(str)
 }
 
 .macro printhex(col,reverse) {

@@ -57,7 +57,7 @@ _main_loop:
 done:
     cls()
     screen_col(lt_blue, blue)
-    print(message, black, 0)
+    print(message)
     rts
 
 waitkey:
@@ -65,7 +65,6 @@ waitkey:
      cmp #0
      beq !-    
      rts          
-
 
 message: str("WOO YAY")
 

@@ -50,7 +50,7 @@ flow:
 .byte 0
 
 
-.macro box(vtable,str,x,y,w,h,xo,yo,scol,ecol,style,selected) {
+.macro box(vtable,str,help,x,y,w,h,xo,yo,scol,ecol,style,selected) {
   jmp vtable
   .byte BOX_DATA_SIZE
   .word box_origin 
@@ -60,8 +60,9 @@ flow:
   .byte scol,ecol
   .word style
   .word str
-  .byte 0
+  .word help
   .byte selected
+  .byte 0
   .byte 0  
 }
 
@@ -72,37 +73,37 @@ flow:
 .const grp3=22
 
 title:
-box(lableVtable,str_automata,0,0,40,3,9,1,lt_blue,blue,styleTitle,0)
+box(lableVtable,str_automata,0,0,0,40,3,9,1,lt_blue,blue,styleTitle,0)
 
 boxRule4Index:
-box(rule4IndexVtable,str_ind,grp1,row2+1,3,3,0,-1,edge_col,edge_col,style3,0)
+box(rule4IndexVtable,str_ind,str_help,grp1,row2+1,3,3,0,-1,edge_col,edge_col,style3,0)
 
 boxRuleBit4:
-box(bit4ruleVtable,str_rule4,grp1+3,row2,14,5,2,2,edge_col,edge_col,style3,0)
+box(bit4ruleVtable,str_rule4,str_help_rule,grp1+3,row2,14,5,2,2,edge_col,edge_col,style3,0)
 
 boxRun4:
-box(confirmboxes4Vtable,str_run,grp1+17,row2,5,5,1,2,selected_col,edge_col,style1,0)
+box(confirmboxes4Vtable,str_run,str_help,grp1+17,row2,5,5,1,2,selected_col,edge_col,style1,0)
 
 boxRR:
-box(toggleBoxesVtable,str_rnd,grp2,row1,3,3,0,-1,selected_col,edge_col,style1,0)
+box(toggleBoxesVtable,str_rnd,str_help_rnd,grp2,row1,3,3,0,-1,selected_col,edge_col,style1,0)
 
 boxScroll:
-box(toggleBoxesVtable,str_scroll,grp2+6,row1,3,3,-2,-1,selected_col,edge_col,style1,0)
+box(toggleBoxesVtable,str_scroll,str_help_scroll,grp2+6,row1,3,3,-2,-1,selected_col,edge_col,style1,0)
 
 boxColB:
-box(colourboxesVtable,str_back,grp3,row1,3,3,0,-1,green,edge_col,style3,0)
+box(colourboxesVtable,str_back,str_help,grp3,row1,3,3,0,-1,green,edge_col,style3,0)
 
 boxColR:
-box(colourboxesVtable,str_bord,grp3+4,row1,3,3,0,-1,red,edge_col,style3,0)
+box(colourboxesVtable,str_bord,str_help,grp3+4,row1,3,3,0,-1,red,edge_col,style3,0)
 
 boxColP:
-box(colourboxesVtable,str_pen,grp3+8,row1,3,3,0,-1,yellow,edge_col,style3,0)
+box(colourboxesVtable,str_pen,str_help,grp3+8,row1,3,3,0,-1,yellow,edge_col,style3,0)
 
 boxColA:
-box(colourboxesVtable,str_aux,grp3+12,row1,3,3,0,-1,blue,edge_col,style3,0)
+box(colourboxesVtable,str_aux,str_help,grp3+12,row1,3,3,0,-1,blue,edge_col,style3,0)
     
 boxExit:
-box(exitboxesVtable,str_exit,32,22,8,3,2,1,selected_col,edge_col,style1,0)
+box(exitboxesVtable,str_exit,str_help,32,22,8,3,2,1,selected_col,edge_col,style1,0)
 
 .var boxesList = List().add(boxRule4Index,boxRuleBit4,boxRun4,boxRR,boxScroll,boxColB,boxColR,boxColP,boxColA,boxExit,title,flow)
 

@@ -21,6 +21,7 @@ box_colour: .byte 0
 box_frame_colour: .byte 0
 box_style: .word 0
 box_legend: .word 0
+box_help: .word 0
 box_select: .byte 0
 box_check: .byte 0
 box_edited: .byte 0

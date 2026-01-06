@@ -14,6 +14,8 @@
 .const BYTES_PER_CHAR=8
 .const BUFFER_LENGTH=COLUMNS*PIXELS_PER_BYTE
 .const RULE_LENGTH=10
+.const HELP_COL=1
+.const HELP_ROW=23
 
 get:
         jsr construct
@@ -53,7 +55,7 @@ render_toggle:
         adc #0 
         sta _chptr+1                
 
-        isThisBoxChecked()
+        lda box_check
         bne !+
         lda #87        
         jmp !++
@@ -70,7 +72,7 @@ render:
 
 !:      lda box_height
         sta box_height_working
-        isThisBoxSelected()
+        lda box_select
         beq _notselected
         lda #<style2
         sta _styleptr
@@ -204,23 +206,25 @@ _mid:   clc
 //print legend
         lda box_legend
         beq !++
-        clc
-        ldx box_y
-        ldy box_x
-        jsr plot
 
         lda box_colour
         sta chrout_colour
-
         lda #1
         cmp box_select
         beq !+
         lda #0
 !:      sta 199
 
-        lda box_legend
-        ldx box_legend+1
-        jsr printstr
+        printptratpos(box_legend,box_x,box_y)
+
+//print help
+ !:     lda box_help
+        beq !+
+        lda box_select
+        beq !+
+        printat(str_help_blank,HELP_COL,HELP_ROW)
+        lda #0 // test
+        printptrat(box_help,HELP_COL,HELP_ROW)
 !:      jmp empty
        
         
@@ -326,7 +330,7 @@ renderrule4:
         
 handlekey:
         jsr construct
-        isThisBoxSelected()
+        lda box_select
         beq !+++
 
         lda #KEY_RETURN
@@ -352,7 +356,7 @@ handlekey:
         
 handlerulekey4: 
         jsr construct
-        isThisBoxSelected()
+        lda box_select
         beq !+
 
         lda keypress           
@@ -370,7 +374,7 @@ handlerulekey4:
 
 handlekeyc:{
         jsr construct
-        isThisBoxSelected()
+        lda box_select
         beq done
         lda keypress
         cmp #KEY_CSR_UP
@@ -397,7 +401,7 @@ decrement:
 
 handlekeyi: {
         jsr construct
-        isThisBoxSelected()
+        lda box_select
         beq done
 
         lda keypress
@@ -696,6 +700,9 @@ boxes:
 .for (var i=0; i<boxesList.size(); i++) {
         .word boxesList.get(i)
 }
+.var hl=@"\$9F\$12\$05"
+.var ll=@"\$9F\$92"
+.var help_default=hl+"S"+ll+"AVE "+hl+"L"+ll+"OAD"
 
 str_exit: str("EXIT")
 str_run: str("RUN")
@@ -708,6 +715,11 @@ str_rndr: str("RND-RULE")
 str_ind: str("IND")
 str_scroll: str("SCROLL")
 str_automata: str(" 1D CELLULAR AUTOMATA ")
+str_help: str(help_default);
+str_help_rule: str(hl+"0-9"+ll+" RULE EDIT");
+str_help_rnd: str(hl+"R"+ll+"ANDOM RULE");
+str_help_scroll: str(ll+"SCR"+hl+"O"+ll+"LL");
+str_help_blank: str(ll+"                          ");
 str_rule: str("********")
 str_rule4: str("**********")
 

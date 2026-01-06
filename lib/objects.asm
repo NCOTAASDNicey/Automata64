@@ -66,14 +66,6 @@
         sta (this),Y
 }
 
-.macro isThisBoxSelected() {
-        loadObjectByte(box_select)        
-}
-
-.macro isThisBoxChecked() {
-        loadObjectByte(box_check)        
-}
-
 .macro isBoxChecked(box) {
         lda [box+jmp_header_size+[box_check-box_origin]]        
 }
