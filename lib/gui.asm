@@ -554,6 +554,10 @@ _key_handledf:
         bne !+
         toggleBoxChecked(boxScroll)         
 
+!:      cmp #88 //X for Exit
+        bne !+
+        jmp exit         
+
 !:      jmp empty
 
 
@@ -719,6 +723,8 @@ str_help: str(help_default);
 str_help_rule: str(hl+"0-9"+ll+" RULE EDIT");
 str_help_rnd: str(hl+"R"+ll+"ANDOM RULE");
 str_help_scroll: str(ll+"SCR"+hl+"O"+ll+"LL");
+str_help_exit: str(ll+"E"+hl+"X"+ll+"IT");
+
 str_help_blank: str(ll+"                          ");
 str_rule: str("********")
 str_rule4: str("**********")
