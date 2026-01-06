@@ -35,13 +35,13 @@ _enter_fullscreen:
         lda [boxColB+jmp_header_size],Y        
         sta VIC_border
 
-        isBoxChecked(boxScroll)
-        beq !+       
+        // isBoxChecked(boxScroll)
+        // beq !+       
         lda VIC_control_1
         and #$F7            // 24 rows
         sta VIC_control_1
         jsr attachScrollIRQ
- !:      
+//  !:      
         lda VIC_control_mem //Point screen memory at $2000
         ora #$8
         sta VIC_control_mem
@@ -105,9 +105,7 @@ leave_fullscreen:
         lda VIC_control_mem //Point screen memory at $0400
         and #$F7
         sta VIC_control_mem
-
-        isBoxChecked(boxScroll)
-        beq !+       
+     
         lda VIC_control_1
         ora #$0B             // Ensure 25 rows and scroll pos
         sta VIC_control_1

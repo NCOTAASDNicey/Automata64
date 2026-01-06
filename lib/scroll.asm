@@ -43,17 +43,19 @@ scroll1line:
         lda _scratch
         cmp #$07
         bne !+
-        jsr continue8rows
+                jsr continue8rows
 !:      rts
 
 scrollIRQ:
-        lda JIFFY_CLOCK+2
+        isBoxChecked(boxScroll)
+        bne !+
+                jmp (vectorCache)
+!:      lda JIFFY_CLOCK+2
         and #JIFFY_MASK
         cmp #JIFFY_MASK
         beq !+
-        jmp (vectorCache)
-!:      
-        jsr scroll1line
+                jmp (vectorCache)
+!:      jsr scroll1line
         jmp (vectorCache)
 
 attachScrollIRQ:
