@@ -1,11 +1,12 @@
 #importonce
+#import "lib/boxes/colourBox.asm"
+
 
 style1: .byte 64, 64, 93, 93, 110, 112, 125, 109, 102
 style2: .byte 98, 98+128, 97, 97+128, 123, 108, 126, 124, 160
 style3: .byte 64, 64, 93, 93, 73, 85, 75, 74, 102
 style4: .byte 98+128, 98, 97+128, 97, 127, 255, 255, 127, 102
 styleTitle: .byte 98+128, 98, 97+128, 97, 127, 127+128, 127+128, 127, 102
-
 
 lableVtable:
     jsr doJumpTable
@@ -22,10 +23,6 @@ exitboxesVtable:
 confirmboxes4Vtable:
      jsr doJumpTable    
     .word render, handlekey, get, select, deselect, render4, empty, leave_fullscreen, continue8rows   
-    
-colourboxesVtable:
-     jsr doJumpTable    
-    .word render, handlekeyc, get, select, deselect, empty, empty, empty, empty       
     
 rule4IndexVtable:
      jsr doJumpTable    
@@ -76,13 +73,13 @@ title:
 box(lableVtable,str_automata,0,0,0,40,3,9,1,lt_blue,blue,styleTitle,0)
 
 boxRule4Index:
-box(rule4IndexVtable,str_ind,str_help,grp1,row2+1,3,3,0,-1,edge_col,edge_col,style3,0)
+box(rule4IndexVtable,str_ind,str_help_csr,grp1,row2+1,3,3,0,-1,edge_col,edge_col,style3,0)
 
 boxRuleBit4:
 box(bit4ruleVtable,str_rule4,str_help_rule,grp1+3,row2,14,5,2,2,edge_col,edge_col,style3,0)
 
 boxRun4:
-box(confirmboxes4Vtable,str_run,str_help,grp1+17,row2,5,5,1,2,selected_col,edge_col,style1,0)
+box(confirmboxes4Vtable,str_run,str_help_run,grp1+17,row2,5,5,1,2,selected_col,edge_col,style1,0)
 
 boxRR:
 box(toggleBoxesVtable,str_rnd,str_help_rnd,grp2,row1,3,3,0,-1,selected_col,edge_col,style1,0)
@@ -91,21 +88,20 @@ boxScroll:
 box(toggleBoxesVtable,str_scroll,str_help_scroll,grp2+6,row1,3,3,-2,-1,selected_col,edge_col,style1,0)
 
 boxColB:
-box(colourboxesVtable,str_bord,str_help_csr,grp3,row1,3,3,0,-1,green,edge_col,style3,0)
+colourBox(str_bord,grp3,row1,green)
 
 boxColR:
-box(colourboxesVtable,str_back,str_help_csr,grp3+4,row1,3,3,0,-1,red,edge_col,style3,0)
+colourBox(str_back,grp3+4,row1,red)
 
 boxColP:
-box(colourboxesVtable,str_pen,str_help_csr,grp3+8,row1,3,3,0,-1,yellow,edge_col,style3,0)
+colourBox(str_pen,grp3+8,row1,yellow)
 
 boxColA:
-box(colourboxesVtable,str_aux,str_help_csr,grp3+12,row1,3,3,0,-1,blue,edge_col,style3,0)
+colourBox(str_aux,grp3+12,row1,blue)
     
 boxExit:
 box(exitboxesVtable,str_exit,str_help_exit,32,22,8,3,2,1,selected_col,edge_col,style1,0)
 
 .var boxesList = List().add(boxRule4Index,boxRuleBit4,boxRun4,boxRR,boxScroll,boxColB,boxColR,boxColP,boxColA,boxExit,title,flow)
-
 
 .const boxes_list_size = boxesList.size()

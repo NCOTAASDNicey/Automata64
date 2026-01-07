@@ -279,7 +279,6 @@ _colbox:
         lda #0
         rts 
 
-
 update_rule4:
         sec
         sbc #49
@@ -371,33 +370,6 @@ handlerulekey4:
         lda #1
         saveObjectByte(box_edited)
 !:      jmp empty
-
-handlekeyc:{
-        jsr construct
-        lda box_select
-        beq done
-        lda keypress
-        cmp #KEY_CSR_UP
-        beq increment
-        cmp #KEY_CSR_DOWN
-        beq decrement
-done:   jmp empty
-
-increment:      
-        loadObjectByte(box_colour)
-        clc
-        adc #1
-wrap:   and #15
-        saveObjectByte(box_colour)
-        lda #1
-        saveObjectByte(box_edited)
-        jmp done
-decrement:
-        loadObjectByte(box_colour)
-        sec
-        sbc #1
-        jmp wrap
-}
 
 handlekeyi: {
         jsr construct
@@ -725,8 +697,8 @@ boxes:
         .word boxesList.get(i)
 }
 .var hl=@"\$9F\$12\$05"
+.var ml=@"\$12\$9E"
 .var ll=@"\$9F\$92"
-.var help_default=hl+"S"+ll+"AVE "+hl+"L"+ll+"OAD"
 
 str_exit: str("EXIT")
 str_run: str("RUN")
@@ -739,14 +711,14 @@ str_rndr: str("RND-RULE")
 str_ind: str("IND")
 str_scroll: str("SCROLL")
 str_automata: str(" 1D CELLULAR AUTOMATA ")
-str_help: str(help_default);
-str_help_rule: str(hl+"0-9"+ll+" RULE EDIT");
+str_help_rule: str(ml+"0-9"+ll+" RULE EDIT "+hl+"S"+ll+"AVE "+hl+"L"+ll+"OAD");
 str_help_rnd: str(hl+"R"+ll+"ANDOM RULE");
 str_help_scroll: str(ll+"SCR"+hl+"O"+ll+"LL");
 str_help_exit: str(ll+"E"+hl+"X"+ll+"IT");
-str_help_csr: str(ll+"CSR "+hl+"U"+ll+" "+hl+"D"+ll+" CHANGE");
+str_help_csr: str(ll+"CSR "+ml+"U"+ll+" "+ml+"D"+ll+" CHANGE");
+str_help_run: str(ll+"RU"+hl+"N"+ll+" "+ml+"RETURN"+ll+" NEXT "+ml+"SPACE"+ll+" SCROLL");
 
-str_help_blank: str(ll+"                          ");
+str_help_blank: str(ll+"                            ");
 str_rule: str("********")
 str_rule4: str("**********")
 
