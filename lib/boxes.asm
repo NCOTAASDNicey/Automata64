@@ -1,4 +1,5 @@
 #importonce
+#import "lib/boxes/indexBox.asm"
 #import "lib/boxes/colourBox.asm"
 
 
@@ -23,11 +24,7 @@ exitboxesVtable:
 confirmboxes4Vtable:
      jsr doJumpTable    
     .word render, handlekey, get, select, deselect, render4, empty, leave_fullscreen, continue8rows   
-    
-rule4IndexVtable:
-     jsr doJumpTable    
-    .word render, handlekeyi, get, select, deselect, empty, render_index, empty, empty       
-    
+
 bit4ruleVtable:
      jsr doJumpTable
     .word renderrule4, handlerulekey4, get, select, deselect, update_rule4, empty, empty, empty
