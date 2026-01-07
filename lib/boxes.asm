@@ -91,20 +91,21 @@ boxScroll:
 box(toggleBoxesVtable,str_scroll,str_help_scroll,grp2+6,row1,3,3,-2,-1,selected_col,edge_col,style1,0)
 
 boxColB:
-box(colourboxesVtable,str_back,str_help,grp3,row1,3,3,0,-1,green,edge_col,style3,0)
+box(colourboxesVtable,str_bord,str_help_csr,grp3,row1,3,3,0,-1,green,edge_col,style3,0)
 
 boxColR:
-box(colourboxesVtable,str_bord,str_help,grp3+4,row1,3,3,0,-1,red,edge_col,style3,0)
+box(colourboxesVtable,str_back,str_help_csr,grp3+4,row1,3,3,0,-1,red,edge_col,style3,0)
 
 boxColP:
-box(colourboxesVtable,str_pen,str_help,grp3+8,row1,3,3,0,-1,yellow,edge_col,style3,0)
+box(colourboxesVtable,str_pen,str_help_csr,grp3+8,row1,3,3,0,-1,yellow,edge_col,style3,0)
 
 boxColA:
-box(colourboxesVtable,str_aux,str_help,grp3+12,row1,3,3,0,-1,blue,edge_col,style3,0)
+box(colourboxesVtable,str_aux,str_help_csr,grp3+12,row1,3,3,0,-1,blue,edge_col,style3,0)
     
 boxExit:
 box(exitboxesVtable,str_exit,str_help_exit,32,22,8,3,2,1,selected_col,edge_col,style1,0)
 
 .var boxesList = List().add(boxRule4Index,boxRuleBit4,boxRun4,boxRR,boxScroll,boxColB,boxColR,boxColP,boxColA,boxExit,title,flow)
+
 
 .const boxes_list_size = boxesList.size()

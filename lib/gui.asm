@@ -556,7 +556,27 @@ _key_handledf:
 
 !:      cmp #88 //X for Exit
         bne !+
-        jmp exit         
+        jmp exit
+
+!:      cmp #78 //N for run
+        bne !+
+        lda #method_deselect
+        sta method
+        lda selected
+        jsr _boxListAt
+
+        lda #2
+        sta selected
+
+        lda #method_select
+        sta method
+        lda selected
+        jsr _boxListAt
+
+        lda #method_action
+        sta method
+        lda selected
+        jsr _boxListAt                      
 
 !:      jmp empty
 
@@ -724,6 +744,7 @@ str_help_rule: str(hl+"0-9"+ll+" RULE EDIT");
 str_help_rnd: str(hl+"R"+ll+"ANDOM RULE");
 str_help_scroll: str(ll+"SCR"+hl+"O"+ll+"LL");
 str_help_exit: str(ll+"E"+hl+"X"+ll+"IT");
+str_help_csr: str(ll+"CSR "+hl+"U"+ll+" "+hl+"D"+ll+" CHANGE");
 
 str_help_blank: str(ll+"                          ");
 str_rule: str("********")
