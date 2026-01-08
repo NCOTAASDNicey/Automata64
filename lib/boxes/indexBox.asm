@@ -1,6 +1,7 @@
 rule4IndexVtable:
      jsr doJumpTable    
-    .word render, handlekeyi, get, select, deselect, empty, render_index, empty, empty       
+    .word render, handlekeyi, select, deselect, empty, render_index, empty, empty       
+
 
 
 handlekeyi: {
@@ -105,4 +106,26 @@ rdBank:
         cpy #0
         bne !-
         leaveProc()
-        rts          
+        rts
+
+rule4bank:
+.byte 1,2,3,0,1,2,2,0,3,2,0,0,0,0,0,0
+.byte 2,0,1,2,2,2,3,3,0,2,0,0,0,0,0,0
+.byte 1,2,0,0,1,3,1,1,0,1,0,0,0,0,0,0
+.byte 2,2,2,2,2,1,2,3,2,3,0,0,0,0,0,0
+
+.byte 3,0,1,0,0,0,2,0,0,0,0,0,0,0,0,0
+.byte 2,1,3,1,2,1,3,3,0,1,0,0,0,0,0,0
+.byte 2,0,1,1,2,0,3,3,2,2,0,0,0,0,0,0
+.byte 3,3,3, 3,3,3, 3,3,3, 3, 0,0,0,0,0,0
+
+.byte 0,0,0, 0,0,0, 0,0,0, 0, 6,5,7,2,0,0
+.byte 1,1,1, 1,1,1, 1,1,1, 1, 6,5,7,2,0,0
+.byte 2,2,2, 2,2,2, 2,2,2, 2, 6,5,7,2,0,0
+.byte 3,3,3, 3,3,3, 3,3,3, 3, 6,5,7,2,0,0
+
+.byte 0,0,0, 0,0,0, 0,0,0, 0, 6,5,7,2,0,0
+.byte 1,1,1, 1,1,1, 1,1,1, 1, 6,5,7,2,0,0
+.byte 2,2,2, 2,2,2, 2,2,2, 2, 6,5,7,2,0,0
+.byte 3,3,3, 3,3,3, 3,3,3, 3, 6,5,7,2,0,0
+rule4bankend:

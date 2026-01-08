@@ -2,13 +2,12 @@
 
 .const method_render = 0
 .const method_key = 1
-.const method_get = 2
-.const method_select = 3
-.const method_deselect = 4
-.const method_action = 5
-.const method_detail = 6
-.const method_escape = 7
-.const method_continue = 8
+.const method_select = 2
+.const method_deselect = 3
+.const method_action = 4
+.const method_detail = 5
+.const method_escape = 6
+.const method_continue = 7
 
 .const  jmp_header_size = 6
 
@@ -21,23 +20,11 @@
         jmp invokevirtual
 }
 
-
 .macro callMethod(m,dest) {
         lda #m
         sta method                  
         jsr dest
 }
-
-.macro getInstanceVariable(v,i) {
-        lda #[v-box_origin]
-        sta v
-        lda #<i
-        ldx #>i
-        ldy #method_get
-        jsr invokevirtual           
-}
-
-
 
 .macro offsetFromThis(obj) {
         ldy #[obj-box_origin]
@@ -85,5 +72,3 @@
         lda #0
         sta [box+jmp_header_size+[box_edited-box_origin]]        
 }
-
-

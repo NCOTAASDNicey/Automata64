@@ -36,33 +36,6 @@ deselect:
         lda #0
         sta (this),Y
         jmp empty
-                     
-toggle:
-        jsr construct
-        loadObjectByte(box_check)
-        eor #1
-        sta (this),Y
-        jmp empty
-
-        
-render_toggle:
-        jsr construct
-        clc
-        lda box_origin
-        adc #X_CHARS+1
-        sta _chptr
-        lda box_origin+1
-        adc #0 
-        sta _chptr+1                
-
-        lda box_check
-        bne !+
-        lda #87        
-        jmp !++
-!:      lda #81
-!:      ldy #0
-        sta (_chptr),Y
-        jmp empty
 
 render:
         jsr construct
@@ -279,53 +252,6 @@ _colbox:
         lda #0
         rts 
 
-update_rule4:
-        sec
-        sbc #49
-        bpl !+
-        lda #9
- !:     tay
-        lda #<rule4
-        sta _chptr
-        lda #>rule4
-        sta _chptr+1
-
-        lda #<str_rule4
-        sta _styleptr
-        lda #>str_rule4
-        sta _styleptr+1
-
-        lda (_chptr),Y
-        clc
-        adc #1
-        and #3
-        sta (_chptr),Y
-        adc #48
-        sta (_styleptr),Y
-        lda #0
-        rts
-        
-renderrule4:
-        lda #<rule4
-        sta _chptr
-        lda #>rule4
-        sta _chptr+1
-
-        lda #<str_rule4
-        sta _styleptr
-        lda #>str_rule4
-        sta _styleptr+1
-
-        ldy #0
-!:      lda (_chptr),Y
-        clc
-        adc #48
-        sta (_styleptr),Y
-        iny
-        cpy #10
-        bne !-
-        jsr render
-        rts
         
 handlekey:
         jsr construct
@@ -352,24 +278,6 @@ handlekey:
 
         !:     lda #0 //Dont signal program end
         rts
-        
-handlerulekey4: 
-        jsr construct
-        lda box_select
-        beq !+
-
-        lda keypress           
-        cmp #48 // Numeric key
-        bcc !+
-        cmp #58
-        bcs !+
-
-        ldy #method_action
-        jsr reinvokevirtual
-        jsr construct
-        lda #1
-        saveObjectByte(box_edited)
-!:      jmp empty
                   
                                             
 flowKey:
@@ -506,14 +414,6 @@ construct:
         bpl !-
         rts
 
-showErrorCode:
-        ldy #0
-        ldx #24
-        clc
-        jsr plot
-        printhexProg(red,0)
-        jmp empty
-
 doJumpTable:
         sta SAREG
         pla
@@ -558,64 +458,3 @@ exit:
         jsr leave_fullscreen
         lda #1
         rts
-
-rule:
-.byte 0,1,1, 1,1,0, 0,0
-ruledec:
-.byte 30
-
-rule4index:
-.byte 0
-
-rule4bank:
-.byte 1,2,3,0,1,2,2,0,3,2,0,0,0,0,0,0
-.byte 2,0,1,2,2,2,3,3,0,2,0,0,0,0,0,0
-.byte 1,2,0,0,1,3,1,1,0,1,0,0,0,0,0,0
-.byte 2,2,2,2,2,1,2,3,2,3,0,0,0,0,0,0
-
-.byte 3,0,1,0,0,0,2,0,0,0,0,0,0,0,0,0
-.byte 2,1,3,1,2,1,3,3,0,1,0,0,0,0,0,0
-.byte 2,0,1,1,2,0,3,3,2,2,0,0,0,0,0,0
-.byte 3,3,3, 3,3,3, 3,3,3, 3, 0,0,0,0,0,0
-
-.byte 0,0,0, 0,0,0, 0,0,0, 0, 6,5,7,2,0,0
-.byte 1,1,1, 1,1,1, 1,1,1, 1, 6,5,7,2,0,0
-.byte 2,2,2, 2,2,2, 2,2,2, 2, 6,5,7,2,0,0
-.byte 3,3,3, 3,3,3, 3,3,3, 3, 6,5,7,2,0,0
-
-.byte 0,0,0, 0,0,0, 0,0,0, 0, 6,5,7,2,0,0
-.byte 1,1,1, 1,1,1, 1,1,1, 1, 6,5,7,2,0,0
-.byte 2,2,2, 2,2,2, 2,2,2, 2, 6,5,7,2,0,0
-.byte 3,3,3, 3,3,3, 3,3,3, 3, 6,5,7,2,0,0
-rule4bankend:
-
-boxes:
-.for (var i=0; i<boxesList.size(); i++) {
-        .word boxesList.get(i)
-}
-.var hl=@"\$9F\$12\$05"
-.var ml=@"\$12\$9E"
-.var ll=@"\$9F\$92"
-
-str_exit: str("EXIT")
-str_run: str("RUN")
-str_back: str("BCK")
-str_pen: str("PEN")
-str_aux: str("AUX")
-str_bord: str("BRD")
-str_rnd: str("RND")
-str_rndr: str("RND-RULE")
-str_ind: str("IND")
-str_scroll: str("SCROLL")
-str_automata: str(" 1D CELLULAR AUTOMATA ")
-str_help_rule: str(ml+"0-9"+ll+" RULE EDIT "+hl+"S"+ll+"AVE "+hl+"L"+ll+"OAD");
-str_help_rnd: str(hl+"R"+ll+"ANDOM RULE");
-str_help_scroll: str(ll+"SCR"+hl+"O"+ll+"LL");
-str_help_exit: str(ll+"E"+hl+"X"+ll+"IT");
-str_help_csr: str(ll+"CSR "+ml+"U"+ll+" "+ml+"D"+ll+" CHANGE");
-str_help_run: str(ll+"RU"+hl+"N"+ll+" "+ml+"RETURN"+ll+" NEXT "+ml+"SPACE"+ll+" SCROLL");
-
-str_help_blank: str(ll+"                            ");
-str_rule: str("********")
-str_rule4: str("**********")
-

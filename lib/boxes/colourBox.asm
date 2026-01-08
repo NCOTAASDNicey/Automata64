@@ -1,6 +1,6 @@
 colourboxesVtable:
      jsr doJumpTable    
-    .word render, handlekeyc, get, select, deselect, empty, empty, empty, empty       
+    .word render, handlekeyc, select, deselect, empty, empty, empty, empty       
 
 handlekeyc:{
         jsr construct
