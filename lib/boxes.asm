@@ -39,10 +39,6 @@ str_rule4: str("**********")
 lableVtable:
     jsr doJumpTable
     .word render, handlekey, empty, empty, empty, empty, empty, empty
-
-boxesVtable:
-     jsr doJumpTable
-    .word render, handlekey, select, deselect, empty, empty, empty, empty
  
 exitboxesVtable:
      jsr doJumpTable 
