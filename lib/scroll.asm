@@ -35,12 +35,12 @@ scroll1line:
         sec
         sbc #$01
         and #$07
-        sta _scratch
+        sta SAREG
         lda VIC_control_1
         and #$F8        
-        ora _scratch
+        ora SAREG
         sta VIC_control_1
-        lda _scratch
+        lda SAREG
         cmp #$07
         bne !+
                 jsr continue8rows

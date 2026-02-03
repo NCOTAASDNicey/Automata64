@@ -147,11 +147,11 @@ _mid:   clc
         sta box_width_working
         lda box_edited
         beq !+
-        lda #red
+        lda #edited_col
         jmp !+++
 !:      lda box_select
         beq !+
-        lda #cyan
+        lda #active_col
         jmp !++
 !:      lda box_frame_colour
 !:      sta box_colour_working
@@ -366,14 +366,14 @@ _boxlist:
         iny
         ldx boxes,Y
         iny
-        sty _scratch+1
+        sty SYREG
 
         ldy method
         jsr invokevirtual
         cmp #0
         beq !+
         sta return 
-!:      ldy _scratch+1 
+!:      ldy SYREG 
         cpy #boxes_list_size*2
         bcc !--
         lda return
@@ -425,12 +425,12 @@ doJumpTable:
         tay
         iny
         lda (_tempptr), y
-        sta _target
+        sta destination
         iny
         lda (_tempptr), y
-        sta _target+1
+        sta destination+1
         lda SAREG
-        jmp (_target)
+        jmp (destination)
              
             
 invokevirtual:

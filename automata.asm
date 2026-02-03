@@ -5,10 +5,12 @@
 :BasicUpstart2(mainProg)
         * = $840
 
-.const edge_col=white
-.const selected_col=cyan
-.const gui_back_col=black
-.const gui_bor_col=gray_3
+.const edge_col=WHITE
+.const selected_col=CYAN
+.const edited_col=RED
+.const active_col=CYAN
+.const gui_back_col=BLACK
+.const gui_bor_col=LIGHT_GREY
 
 
 #import "lib/data.asm"
@@ -56,8 +58,8 @@ _main_loop:
 
 done:
     cls()
-    screen_col(lt_blue, blue)
-    lda #lt_blue
+    screen_col(LIGHT_BLUE, BLUE)
+    lda #LIGHT_BLUE
     sta chrout_colour
     print(message)
     rts

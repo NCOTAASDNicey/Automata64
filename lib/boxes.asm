@@ -83,7 +83,7 @@ flow:
 .const grp3=22
 
 title:
-box(lableVtable,str_automata,0,0,0,40,3,9,1,lt_blue,blue,styleTitle,0)
+box(lableVtable,str_automata,0,0,0,40,3,9,1,LIGHT_BLUE,BLUE,styleTitle,0)
 
 boxRule4Index:
 box(rule4IndexVtable,str_ind,str_help_csr,grp1,row2+1,3,3,0,-1,edge_col,edge_col,style3,0)
@@ -101,16 +101,16 @@ boxScroll:
 toggleBox(str_scroll,str_help_scroll,grp2+6,row1,-2,-1)
 
 boxColB:
-colourBox(str_bord,grp3,row1,green)
+colourBox(str_bord,grp3,row1,GREEN)
 
 boxColR:
-colourBox(str_back,grp3+4,row1,red)
+colourBox(str_back,grp3+4,row1,RED)
 
 boxColP:
-colourBox(str_pen,grp3+8,row1,yellow)
+colourBox(str_pen,grp3+8,row1,YELLOW)
 
 boxColA:
-colourBox(str_aux,grp3+12,row1,blue)
+colourBox(str_aux,grp3+12,row1,BLUE)
     
 boxExit:
 box(exitboxesVtable,str_exit,str_help_exit,32,22,8,3,2,1,selected_col,edge_col,style1,0)

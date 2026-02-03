@@ -1,8 +1,7 @@
 #importonce
 * = $4000 "Data"
 // globals
-_target: .word 0
-_scratch: .byte 0,0,0,0,0,0,0,0
+destination: .word 0
 method: .byte 0
 variable: .byte 0
 selected: .byte 0

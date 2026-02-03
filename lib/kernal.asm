@@ -105,25 +105,6 @@
 .const KEY_RETURN= 13
 .const KEY_ESC= 3
 
-
-// Character codes for the colors.
-.const black=        0
-.const white=        1
-.const red=          2
-.const cyan=         3
-.const purple=       4
-.const green=        5
-.const blue=         6
-.const yellow=       7
-.const orange=       8
-.const lt_orange=    9
-.const pink=         10
-.const gray_1=       11
-.const gray_2=       12
-.const lt_green=     13
-.const lt_blue=      14
-.const gray_3=       15
-
 .const zero_page_rs_232=   247
 
 .const zero_page_free1=    251
@@ -136,4 +117,7 @@
 .const CINV=$0314 // Hardware interrupt vector
 .const JIFFY_CLOCK=$A0
 .const SAREG=$30C
+.const SXREG=$30D
+.const SYREG=$30E
+
 
