@@ -13,6 +13,10 @@ styleTitle: .byte 98+128, 98, 97+128, 97, 127, 127+128, 127+128, 127, 102
 .var hl=@"\$9F\$12\$05"
 .var ml=@"\$12\$9E"
 .var ll=@"\$9F\$92"
+.var arr_u=@"\$61"
+.var arr_d=@"\$73"
+.var arr_l=@"\$78"
+.var arr_r=@"\$7A"
 
 str_exit: str("EXIT")
 str_run: str("RUN")
@@ -29,7 +33,7 @@ str_help_rule: str(ml+"0-9"+ll+" RULE EDIT "+hl+"S"+ll+"AVE "+hl+"L"+ll+"OAD");
 str_help_rnd: str(hl+"R"+ll+"ANDOM RULE");
 str_help_scroll: str(ll+"SCR"+hl+"O"+ll+"LL");
 str_help_exit: str(ll+"E"+hl+"X"+ll+"IT");
-str_help_csr: str(ll+"CSR "+ml+"U"+ll+" "+ml+"D"+ll+" CHANGE");
+str_help_csr: str(ml+arr_u+ll+" "+ml+arr_d+ll+" CHANGE");
 str_help_run: str(ll+"RU"+hl+"N"+ll+" "+ml+"RETURN"+ll+" NEXT "+ml+"SPACE"+ll+" SCROLL");
 
 str_help_blank: str(ll+"                            ");

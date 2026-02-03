@@ -22,6 +22,8 @@
 #import "lib/render4.asm"
 #import "lib/scroll.asm"
 #import "lib/file.asm"
+#import "lib/charprogram.asm"
+
 
 initRandom:
     lda #$FF  // maximum frequency value
@@ -38,6 +40,8 @@ initRandom:
 mainProg:
     cls()
     jsr initRandom
+    jsr enterProgramableCharMode
+    jsr initChars
     screen_col(gui_back_col, gui_bor_col)
     lda #0
     sta scrmode
@@ -57,6 +61,7 @@ _main_loop:
     jmp _main_loop
 
 done:
+    jsr leaveProgramableCharMode
     cls()
     screen_col(LIGHT_BLUE, BLUE)
     lda #LIGHT_BLUE
