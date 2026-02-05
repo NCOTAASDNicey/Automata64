@@ -9,6 +9,7 @@ style2: .byte 98, 98+128, 97, 97+128, 123, 108, 126, 124, 160
 style3: .byte 64, 64, 93, 93, 73, 85, 75, 74, 102
 style4: .byte 98+128, 98, 97+128, 97, 127, 255, 255, 127, 102
 styleTitle: .byte 98+128, 98, 97+128, 97, 127, 127+128, 127+128, 127, 102
+styleHelp: .byte 98+128, 98, 97+128, 97, 127, 127+128, 127+128, 127, 96
 
 .var hl=@"\$9F\$12\$05"
 .var ml=@"\$12\$9E"
@@ -89,6 +90,9 @@ flow:
 title:
 box(lableVtable,str_automata,0,0,0,40,3,9,1,LIGHT_BLUE,BLUE,styleTitle,0)
 
+helpArea:
+box(lableVtable,0,0,0,22,32,3,1,1,DARK_GREY,GREY,styleHelp,0)
+
 boxRule4Index:
 box(rule4IndexVtable,str_ind,str_help_csr,grp1,row2+1,3,3,0,-1,edge_col,edge_col,style3,0)
 
@@ -119,8 +123,9 @@ colourBox(str_aux,grp3+12,row1,BLUE)
 boxExit:
 box(exitboxesVtable,str_exit,str_help_exit,32,22,8,3,2,1,selected_col,edge_col,style1,0)
 
-.var boxesList = List().add(boxRule4Index,boxRuleBit4,boxRun4,boxRR,boxScroll,boxColB,boxColR,boxColP,boxColA,boxExit,title,flow)
-
+.var boxesList = List().add(boxRule4Index,boxRuleBit4,boxRun4,boxRR,boxScroll,boxColB,boxColR,boxColP,boxColA,boxExit)
+.const boxes_interactive_size = boxesList.size()
+.eval boxesList.add(title,helpArea,flow)
 .const boxes_list_size = boxesList.size()
 
 boxes:

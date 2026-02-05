@@ -102,11 +102,17 @@ _mid:   clc
         sty box_width_working
         ldy #fill
         lda (_styleptr),Y
+        cmp #96
+        bne useFill
+        ldy #0
+        jmp noFill
+useFill:
         ldy box_width_working
 !:      dey
         sta (_chptr),y
         bne !-
-        sty box_width_working
+noFill:        
+        sty box_width_working        
         ldy #left
         lda (_styleptr),Y
         ldy box_width_working
@@ -135,7 +141,7 @@ _mid:   clc
         ldy box_width_working
         sta (_chptr),y
  
-//Fill in colour
+//Fill in colour frame
         lda box_col_origin
         sta _chptr
         lda box_col_origin+1
@@ -157,6 +163,12 @@ _mid:   clc
 !:      sta box_colour_working
         jsr _colframe
 
+//Fill in colour content
+        ldy #fill
+        lda (_styleptr),Y
+        cmp #96
+        beq noColourFill
+
         clc
         lda box_col_origin
         adc #X_CHARS+1
@@ -175,6 +187,7 @@ _mid:   clc
         lda box_colour
         sta box_colour_working
         jsr _colbox
+noColourFill:
         
 //print legend
         lda box_legend
@@ -287,7 +300,7 @@ flowKey:
         bne _not_leftf
         dec selected
         bpl _key_handledf
-        lda #boxes_list_size-3
+        lda #boxes_interactive_size-1
         sta selected
         jmp _key_handledf
 _not_leftf:
@@ -295,7 +308,7 @@ _not_leftf:
         bne !+
         inc selected
         lda selected
-        cmp #boxes_list_size-2
+        cmp #boxes_interactive_size
         bcc _key_handledf
         lda #0
         sta selected       
