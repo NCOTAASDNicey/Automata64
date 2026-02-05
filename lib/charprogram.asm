@@ -2,7 +2,7 @@
 #import "macros.asm"
 #import "zero.asm"
 
-initChars:
+programChars:
 {
         enterProc()
         sei

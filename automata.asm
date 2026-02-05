@@ -40,8 +40,7 @@ initRandom:
 mainProg:
     cls()
     jsr initRandom
-    jsr enterProgramableCharMode
-    jsr initChars
+    jsr setupForGui
     screen_col(gui_back_col, gui_bor_col)
     lda #0
     sta scrmode
@@ -73,7 +72,16 @@ waitkey:
 !:   jsr getin
      cmp #0
      beq !-    
-     rts          
+     rts
+
+setupForGui:
+    jsr enterProgramableCharMode
+    jsr programChars
+    rts
+
+returnToGui:
+    jsr leave_fullscreen
+    jsr setupForGui
+    jmp empty          
 
 message: str("WOO YAY")
-

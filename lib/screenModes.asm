@@ -126,16 +126,14 @@ leave_fullscreen:
 enterProgramableCharMode:
         lda VIC_control_mem
         and #$F0
-        clc
-        adc #$0C
+        ora #$0C
         sta VIC_control_mem
         rts
 
 leaveProgramableCharMode:
         lda VIC_control_mem
         and #$F0
-        clc
-        adc #$05
+        ora #$05
         sta VIC_control_mem
         rts
 

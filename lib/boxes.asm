@@ -50,7 +50,7 @@ exitboxesVtable:
     
 confirmboxes4Vtable:
      jsr doJumpTable    
-    .word render, handlekey, select, deselect, render4, empty, leave_fullscreen, continue8rows   
+    .word render, handlekey, select, deselect, render4, empty, returnToGui, continue8rows   
 
 flowVtable:
      jsr doJumpTable
