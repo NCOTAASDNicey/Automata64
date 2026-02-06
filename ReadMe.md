@@ -6,7 +6,13 @@
 
 What is a one dimensional cellular automata? It's a way of generating patterns with some interesting properties, from simple starting conditions. Stephen Wolfram in his book [A new Kind of Science](https://en.wikipedia.org/wiki/A_New_Kind_of_Science) both describes and studies the properties of these simple systems, and whilst he gets a little carried away about how exactly important it all is there is no doubt that these are very interesting. When they built a new railway station in Cambridge in 2017 they clad the [outside in Rule 30](https://qz.com/1001946/a-uk-train-stations-tribute-to-a-famous-mathematician-got-everything-right-except-his-math), which might be as real world useful as it gets. For me since about 1985 its been a way of getting computers to do something visually interesting. It lends itself nicely to a machine coded implemention has been my goto `HelloWorld` when finding my way around a new system and seeing how fast I can get this to go. Over the years I've implemented it on BBC Micro, Amiga, VIC 20, Archimedies, Raspberry PI, Raspberry PI Pico and Javascript. If its got 4 colours and pixels its fair game.
 
-The classic CA ([Cellular Automata](https://en.wikipedia.org/wiki/Elementary_cellular_automaton)), as described by Wolfram has simple binary cells containg a 0 or 1. However I have always favoured 2 bit cells (0,1,2 and 3), which can be represented with four different colours rather than the black and white of pure binary cells. That's what I'm using here taking advantage of the C64 Multicolour hi-resolution mode.
+The classic CA ([Cellular Automata](https://en.wikipedia.org/wiki/Elementary_cellular_automaton)), as described by Wolfram has simple binary cells containg a 0 or 1. However I have always favoured 2 bit cells (0,1,2 and 3), which can be represented with four different colours rather than the black and white of pure binary cells. That's what I'm using here taking advantage of the C64 Multicolour hi-resolution mode. Wolfram catagorises CA into four classes
+1. Cellular automata which rapidly converge to a uniform state
+2. Cellular automata which rapidly converge to a repetitive or stable state.
+3. Cellular automata which appear to remain in a random state
+4. Cellular automata which form areas of repetitive or stable states, but also form structures that interact with each other in complicated ways
+
+The structures are also known as gliders, which you might of encontered before in the 2 dimensional cellular automata [Conway's Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life). Here patterns may repeat over several generations, to give vertical structures, or regenerate with a horisontal displacement, to give diagonal patterns. 2 bit 1D CAs seem to provide enough richness to have all four of Wolframs classes often with mixtures of two or more.
 
 ## How to use
 
@@ -21,23 +27,27 @@ Pressing Return on the RUN box will display the automata. The RUN STOP key (ESC 
 
 There are two main parts to a CA, the **cells** and a **rule**.
 
-In one dimensional CA the cells can be represented as a buffer or array of values, and in ths case each cell can have a value from 0 to 3. In the case of the C64 we need 160 cells per horizontal line. The cells are initialised randomly and the buffer is treated as being wrapped, that is the last cell is treated as being next the first. So more of a circle of 160 cells than a line.
+**Cells**
+
+In a one dimensional CA the cells can be represented as a buffer or array of values, and in this case each cell can have a value from 0 to 3.  For the C64 we need 160 cells per horizontal line. The cells are initialised randomly and the buffer is treated as being wrapped, that is the last cell is next the first. So more of a circle of 160 cells than a line. I use two sets of cells, and swap between them taking turns to be the source and the destination of the generation.
 
 The rule is applied to give the next generation, which is then plotted on the display in the line below, and so on till the bottom of the screen is reached.
 
-The rule is itself an array of ten cells each holding a value between 0 and 3. To apply the rule we take a cell in the current generation, say at index _i_ and the cells before (_i-1_) and after it (_i+1_), and sum their values together.
+**Rule**
+
+The rule is an array of ten cells each holding a value between 0 and 3. To apply the rule take a cell in the current generation, say at index _i_ and the cells before (_i-1_) and after it (_i+1_), and sum their values together.
 
 ```
-initialise cellA with random values
+initialise cellsA with random values
 do {
-    plot cellA to display
+    plot cellsA to display
     move down screen
     if at bottom then exit
-    for i = 0 to cellA.length {
-        n = cellA[i] + cellA[i-1] + cellA[i+1]
-        cellB[i] = rule[n]
+    for i = 0 to cellsA.length {
+        n = cellsA[i] + cellsA[i-1] + cellsA[i+1]
+        cellsB[i] = rule[n]
     }
-    swap cellB to cellA
+    swap cellsB to cellsA
 } repeat
 ```
 
