@@ -47,9 +47,9 @@ render:
         sta box_height_working
         lda box_select
         beq _notselected
-        lda #<style2
+        lda #<styleSelected
         sta _styleptr
-        lda #>style2
+        lda #>styleSelected
         sta _styleptr+1
         jmp _style_done
         

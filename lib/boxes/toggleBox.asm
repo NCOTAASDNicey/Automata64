@@ -31,6 +31,6 @@ render_toggle:
         jmp empty
 
 .macro toggleBox(str,help,x,y,xo,yo){
-    box(toggleBoxesVtable,str,help,x,y,3,3,xo,yo,selected_col,edge_col,style1,0)
+    box(toggleBoxesVtable,str,help,x,y,3,3,xo,yo,selected_col,edge_col,styleAction,0)
 }
 

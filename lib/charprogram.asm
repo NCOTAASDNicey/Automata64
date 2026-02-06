@@ -34,7 +34,8 @@ programChars:
         customChar(1,83)
         customChar(2,88)
         customChar(3,90)                             
-        customChar(4,102)                             
+        customChar(4,102)
+        customChar(5,94)                          
 
         lda $1
         ora #$04
@@ -101,5 +102,15 @@ customChars:
         .byte %01010101
         .byte %10101010
         .byte %01010101
-        .byte %10101010                      
+        .byte %10101010
+
+        .byte %00000000
+        .byte %00000010        
+        .byte %00100010
+        .byte %01000010
+        .byte %11111110
+        .byte %01000000
+        .byte %00100000
+        .byte %00000000
+
 customCharsEnd:
