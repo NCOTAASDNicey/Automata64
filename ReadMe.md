@@ -4,7 +4,7 @@
 
 ## Overview
 
-What is a one dimensional cellular automata? It's a way of generating patterns with some interesting properties, from simple starting conditions. Stephen Wolfram in his book [A new Kind of Science](https://en.wikipedia.org/wiki/A_New_Kind_of_Science) both describes and studies the properties of these simple systems, and whilst he gets a little carried away about how exactly important it all is there is no doubt that these are very interesting. When they built a new railway station in Cambridge in 2017 they clad the [outside in Rule 30](https://qz.com/1001946/a-uk-train-stations-tribute-to-a-famous-mathematician-got-everything-right-except-his-math), which might be as real world useful as it gets. For me since about 1985 its been a way of getting computers to do something visually interesting. It lends itself nicely to a machine coded implemention has been my goto `HelloWorld` when finding my way around a new system. Over the years I've implemented it on BBC Micro, Amiga, VIC 20, Archimedies, Raspberry PI, Raspberry PI Pico and Javascript. If its got 4 colours and pixels its fair game.
+What is a one dimensional cellular automata? It's a way of generating patterns with some interesting properties, from simple starting conditions. Stephen Wolfram in his book [A new Kind of Science](https://en.wikipedia.org/wiki/A_New_Kind_of_Science) both describes and studies the properties of these simple systems, and whilst he gets a little carried away about how exactly important it all is there is no doubt that these are very interesting. When they built a new railway station in Cambridge in 2017 they clad the [outside in Rule 30](https://qz.com/1001946/a-uk-train-stations-tribute-to-a-famous-mathematician-got-everything-right-except-his-math), which might be as real world useful as it gets. For me since about 1985 its been a way of getting computers to do something visually interesting. It lends itself nicely to a machine coded implemention has been my goto `HelloWorld` when finding my way around a new system and seeing how fast I can get this to go. Over the years I've implemented it on BBC Micro, Amiga, VIC 20, Archimedies, Raspberry PI, Raspberry PI Pico and Javascript. If its got 4 colours and pixels its fair game.
 
 The classic CA ([Cellular Automata](https://en.wikipedia.org/wiki/Elementary_cellular_automaton)), as described by Wolfram has simple binary cells containg a 0 or 1. However I have always favoured 2 bit cells (0,1,2 and 3), which can be represented with four different colours rather than the black and white of pure binary cells. That's what I'm using here taking advantage of the C64 Multicolour hi-resolution mode.
 
@@ -25,7 +25,7 @@ In one dimensional CA the cells can be represented as a buffer or array of value
 
 The rule is applied to give the next generation, which is then plotted on the display in the line below, and so on till the bottom of the screen is reached.
 
-The rule is itself an array of ten cells each holding a value between 0 and 3. To apply the rule we take a cell in the current generation, say at index _i_ and the cells before and after it, and sum their values together.
+The rule is itself an array of ten cells each holding a value between 0 and 3. To apply the rule we take a cell in the current generation, say at index _i_ and the cells before (_i-1_) and after it (_i+1_), and sum their values together.
 
 ```
 initialise cellA with random values
@@ -41,7 +41,7 @@ do {
 } repeat
 ```
 
-This will give us a result between 0 and 9, depending on the values of the three cells. Take this value and index into our rule to pull out the value there, then insert into the next generation at the corresponding index _i_. There is a little bit of stuff to do at the first and last cells to effect the wrap, but that really is all there is to it.
+This will give us a result between 0 and 9, depending on the values of the three cells. This value is then used to index into our rule to pull out a new value and insert into the next generation at the corresponding index _i_. There is a little bit of stuff to do at the first and last cells to effect the wrap, but that really is all there is to it.
 
 ## Development
 
@@ -53,7 +53,7 @@ I used Visual Studio with the VS64 plugin, Kick assembler and VICE C64 emulator.
 
 You can use the drive9.d64 disk image file provided here. You'll also find you can mount the file by menuing over it in VS Code.
 
-Kick assembler is the most useful 6502 assembler I've found so far. Its implemented in Java so follow teh docs linked below to find out how to install it.
+Kick assembler is the most useful 6502 assembler I've found so far. It supports macros and structures such as lists, which I've made use of. Its implemented in Java so follow the docs linked below to find out how to install it.
 
 The GUI uses a list of object like boxes each having some standard methods and data fields for rendering and key handling, as well as standard states like selection and marking as edited. There are some dirty bits in there like copying the object to a fixed place in memory to make addressing it easier, but its assemlber so hey ho.
 
