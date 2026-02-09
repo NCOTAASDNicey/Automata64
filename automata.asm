@@ -60,19 +60,19 @@ _main_loop:
     jmp _main_loop
 
 done:
+    jsr leave_fullscreen
     jsr leaveProgramableCharMode
     cls()
-    screen_col(LIGHT_BLUE, BLUE)
+    screen_col(BLUE,LIGHT_BLUE)
     lda #LIGHT_BLUE
     sta chrout_colour
-    print(message)
     rts
 
 waitkey:
-!:   jsr getin
-     cmp #0
-     beq !-    
-     rts
+    jsr getin
+    cmp #0
+    beq waitkey    
+    rts
 
 setupForGui:
     jsr enterProgramableCharMode

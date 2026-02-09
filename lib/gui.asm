@@ -468,6 +468,5 @@ empty:
         rts
         
 exit:
-        jsr leave_fullscreen
         lda #1
         rts
